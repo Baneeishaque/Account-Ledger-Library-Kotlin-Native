@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "libnative_api.h": "c",
+        "stdbool.h": "c"
+    },
+    "java.configuration.updateBuildConfiguration": "automatic"
+}
