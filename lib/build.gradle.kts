@@ -1,17 +1,10 @@
 plugins {
-    // kotlin("multiplatform") version "1.9.20-mercury-653"
-    // kotlin("multiplatform") version "1.9.20-dev-947"
-    // kotlin("multiplatform") version "1.9.20-dev-810"
-    // kotlin("multiplatform") version "1.8.21-395"
-    kotlin("multiplatform") version "1.8.21"
+//     kotlin("multiplatform") version "1.9.20-mercury-653"
+     kotlin("multiplatform") version "1.9.20-dev-947"
 }
 
 group = "ndk.banee"
 version = "1.0-SNAPSHOT"
-
-repositories {
-    mavenCentral()
-}
 
 kotlin {
     val hostOs = System.getProperty("os.name")

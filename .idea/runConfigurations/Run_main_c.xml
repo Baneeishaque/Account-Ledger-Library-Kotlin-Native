@@ -1,0 +1,13 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run main.c" type="BatchConfigurationType" factoryName="Batch">
+    <option name="INTERPRETER_OPTIONS" value="" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+    <option name="PARENT_ENVS" value="true" />
+    <module name="" />
+    <option name="SCRIPT_NAME" value="./lib/build/bin/native/debugShared/main.exe" />
+    <option name="PARAMETERS" value="" />
+    <method v="2">
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Compile main.c" run_configuration_type="PowerShellRunType" />
+    </method>
+  </configuration>
+</component>

@@ -1,0 +1,8 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Compile main.c" type="PowerShellRunType" factoryName="PowerShell" scriptUrl="C:\Lab_Data\Account-Ledger-Library-Kotlin-Native\compileMainCFile.ps1" workingDirectory="C:\Lab_Data\Account-Ledger-Library-Kotlin-Native" executablePath="$PROJECT_DIR$/../../Windows/System32/WindowsPowerShell/v1.0/powershell.exe">
+    <envs />
+    <method v="2">
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="linkNative" run_configuration_type="GradleRunConfiguration" />
+    </method>
+  </configuration>
+</component>
