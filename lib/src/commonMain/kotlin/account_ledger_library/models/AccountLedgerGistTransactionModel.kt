@@ -1,4 +1,4 @@
-package account.ledger.library.models
+package account_ledger_library.models
 
 import kotlinx.serialization.Required
 import kotlinx.serialization.Serializable
