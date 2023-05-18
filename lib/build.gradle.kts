@@ -1,6 +1,9 @@
 plugins {
-//     kotlin("multiplatform") version "1.9.20-mercury-653"
-     kotlin("multiplatform") version "1.9.20-dev-947"
+//    val kotlinVersion = "1.8.10"
+    val kotlinVersion = "1.9.20-dev-947"
+//    val kotlinVersion = "1.9.20-mercury-653"
+    kotlin("multiplatform") version kotlinVersion
+    kotlin("plugin.serialization") version kotlinVersion
 }
 
 group = "ndk.banee"
@@ -27,7 +30,11 @@ kotlin {
     }
 
     sourceSets {
-        val commonMain by getting
+        val commonMain by getting {
+            dependencies {
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+            }
+        }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
