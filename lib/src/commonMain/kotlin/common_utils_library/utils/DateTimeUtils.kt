@@ -1,9 +1,8 @@
 package common_utils_library.utils
 
-import common_utils_library.constants.Constants
-import common_utils_library.enums.TimePartManipulationEnum
-import common_utils_library.enums.TimePartSpecificationEnum
-import common_utils_library.models.IsOkModel
+import com.soywiz.klock.DateFormat
+import com.soywiz.klock.PatternDateFormat
+
 //import java.time.LocalDateTime
 //import java.time.format.DateTimeFormatter
 //import java.time.format.DateTimeFormatter.ofPattern
@@ -11,14 +10,14 @@ import common_utils_library.models.IsOkModel
 
 object DateTimeUtils {
 
-//    @JvmStatic
+    //    @JvmStatic
     val normalDateTimePatternAsText = "dd/MM/yyyy HH:mm:ss"
 
 //    @JvmStatic
 //    val normalDateTimePattern: DateTimeFormatter = ofPattern(normalDateTimePatternAsText)!!
-//
+
 //    @JvmStatic
-//    val normalDatePattern: DateTimeFormatter = ofPattern("dd/MM/yyyy")!!
+    val normalDatePattern: PatternDateFormat = DateFormat(pattern = "dd/MM/yyyy")
 
 //    @JvmStatic
 //    fun addDaysToNormalDateTimeInText(

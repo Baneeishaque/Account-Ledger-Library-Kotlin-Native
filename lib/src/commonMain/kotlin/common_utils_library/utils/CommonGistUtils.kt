@@ -15,7 +15,7 @@ import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 
-object GistUtils {
+object CommonGistUtils {
 
 //    @JvmStatic
     fun getHttpClientForGitHub(accessToken: String = "", isDevelopmentMode: Boolean): HttpClient {
