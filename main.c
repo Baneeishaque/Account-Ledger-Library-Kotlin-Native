@@ -8,7 +8,11 @@ int main(int argc, char **argv)
     native_ExportedSymbols *lib = native_symbols();
 
     native_kref_account_ledger_library_utils_GistUtils newInstance = lib->kotlin.root.account_ledger_library.utils.GistUtils.GistUtils();
-    lib->kotlin.root.account_ledger_library.utils.GistUtils.processGistId(newInstance, "USERNAME", "GITHUB_ACCESS_TOKEN", "GIST_ID", true, false);
+    const char* accountLedgerGistText = lib->kotlin.root.account_ledger_library.utils.GistUtils.processGistIdForTextData(newInstance, "USERNAME", "GITHUB_ACCESS_TOKEN", "GIST_ID", false, false);
+    lib->DisposeStablePointer(newInstance.pinned);
+    lib->DisposeString(accountLedgerGistText);
+
+    printf("Gist Data : %s",accountLedgerGistText);
 
     return 0;
 }

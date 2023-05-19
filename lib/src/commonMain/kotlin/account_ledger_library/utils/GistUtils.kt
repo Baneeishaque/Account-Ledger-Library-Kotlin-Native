@@ -13,8 +13,8 @@ import kotlinx.serialization.json.Json
 
 class GistUtils {
 
-//    @JvmStatic
-    fun processGistId(
+    //    @JvmStatic
+    fun processGistIdForData(
 
         userName: String,
         gitHubAccessToken: String,
@@ -193,5 +193,26 @@ class GistUtils {
             }
         }
         return accountLedgerGist
+    }
+
+    fun processGistIdForTextData(
+
+        userName: String,
+        gitHubAccessToken: String,
+        gistId: String,
+        isDevelopmentMode: Boolean,
+        isApiCall: Boolean = true
+
+    ): String {
+
+        val accountLedgerGistText: String = Json.encodeToString(
+            AccountLedgerGistModel.serializer(),
+            processGistIdForData(userName, gitHubAccessToken, gistId, isDevelopmentMode, isApiCall)
+        )
+        if (isDevelopmentMode) {
+
+            println("Gist Data : $accountLedgerGistText")
+        }
+        return accountLedgerGistText
     }
 }
