@@ -12,7 +12,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import kotlin.use
 
-object GistUtils {
+class GistUtils {
 
 //    @JvmStatic
     fun processGistId(

@@ -63,7 +63,12 @@ kotlin {
                 implementation(kotlin("test"))
             }
         }
-        val nativeMain by getting
+        val nativeMain by getting {
+            dependencies {
+//                implementation("io.ktor:ktor-client-curl:$ktorVersion")
+                implementation("io.ktor:ktor-client-winhttp:$ktorVersion")
+            }
+        }
         val nativeTest by getting
     }
 }
