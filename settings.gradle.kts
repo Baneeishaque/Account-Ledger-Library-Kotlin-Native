@@ -1,4 +1,4 @@
-rootProject.name = "Account-Ledger-Library-Kotlin-Native"
+rootProject.name = "Account-Ledger-Library-Kotlin-Multiplatform"
 include("lib")
 pluginManagement {
     repositories {
