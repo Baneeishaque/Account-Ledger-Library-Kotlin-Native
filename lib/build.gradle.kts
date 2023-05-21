@@ -42,17 +42,16 @@ kotlin {
     }
 
     sourceSets {
-        // TODO : Use BoM
-        val ktorVersion = "2.3.1-eap-674"
         val commonMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-                implementation("io.ktor:ktor-client-core:$ktorVersion")
-                implementation("io.ktor:ktor-client-auth:$ktorVersion")
-                implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
-                implementation("io.ktor:ktor-client-logging:$ktorVersion")
-                implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+                implementation(platform("io.ktor:ktor-bom:2.3.1-eap-674"))
+                implementation("io.ktor:ktor-client-core")
+                implementation("io.ktor:ktor-client-auth")
+                implementation("io.ktor:ktor-client-content-negotiation")
+                implementation("io.ktor:ktor-client-logging")
+                implementation("io.ktor:ktor-serialization-kotlinx-json")
                 implementation("com.soywiz.korlibs.klock:klock:2.2.0")
             }
         }
@@ -63,8 +62,8 @@ kotlin {
         }
         val mingwX64Main by getting {
             dependencies {
-//                implementation("io.ktor:ktor-client-curl:$ktorVersion")
-                implementation("io.ktor:ktor-client-winhttp:$ktorVersion")
+//                implementation("io.ktor:ktor-client-curl")
+                implementation("io.ktor:ktor-client-winhttp")
             }
         }
     }
