@@ -13,7 +13,9 @@ kotlin {
 
 //    targetHierarchy.default()
 
-    jvm()
+    jvm {
+        jvmToolchain(20)
+    }
 
     val hostOs = System.getProperty("os.name")
     val isArm64 = System.getProperty("os.arch") == "aarch64"
