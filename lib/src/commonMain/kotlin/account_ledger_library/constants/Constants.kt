@@ -1,6 +1,6 @@
 package account_ledger_library.constants
 
-import common_utils_library.constants.CommonConstants as CommonConstants
+import common_utils_library.constants.CommonConstants
 
 object Constants {
 
