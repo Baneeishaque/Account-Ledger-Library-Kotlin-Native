@@ -13,7 +13,6 @@ import kotlinx.serialization.json.Json
 
 class GistUtils {
 
-    //    @JvmStatic
     fun processGistIdForData(
 
         userName: String,
