@@ -1,8 +1,10 @@
 package account_ledger_library.utils;
 
+import kotlin.jvm.JvmStatic
+
 object TextAccountLedgerUtils {
 
-//    @JvmStatic
+    @JvmStatic
     fun addLineToCurrentAccountLedger(
 
         ledgerToProcess: LinkedHashMap<UInt, MutableList<String>>,
