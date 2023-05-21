@@ -204,14 +204,57 @@ class GistUtils {
 
     ): String {
 
-        val accountLedgerGistText: String = Json.encodeToString(
-            AccountLedgerGistModel.serializer(),
-            processGistIdForData(userName, gitHubAccessToken, gistId, isDevelopmentMode, isApiCall)
+        val accountLedgerGist = processGistIdForData(userName, gitHubAccessToken, gistId, isDevelopmentMode, isApiCall)
+        if (isDevelopmentMode) {
+
+            println(
+                "Gist Data : ${
+                    Json.encodeToString(
+                        AccountLedgerGistModel.serializer(),
+                        accountLedgerGist
+                    )
+                }"
+            )
+        }
+
+        val accountLedgerGistV2 = AccountLedgerGistModelV2(
+            userName = accountLedgerGist.userName,
+            accountLedgerPages = mutableListOf()
+        )
+
+        accountLedgerGist.accountLedgerPages.forEach { accountLedgerPage: Map.Entry<UInt, LinkedHashMap<String, AccountLedgerGistDateLedgerModel>> ->
+
+            val localAccountLedgerPage = AccountLedgerPage(
+                accountId = accountLedgerPage.key,
+                transactionDatePages = mutableListOf()
+            )
+
+            accountLedgerPage.value.forEach { transactionDatePage: Map.Entry<String, AccountLedgerGistDateLedgerModel> ->
+
+                localAccountLedgerPage.transactionDatePages.add(
+
+                    TransactionDatePage(
+
+                        transactionDatePage.key,
+                        transactionDatePage.value.initialBalanceOnDate!!,
+                        transactionDatePage.value.transactionsOnDate,
+                        transactionDatePage.value.finalBalanceOnDate!!
+                    )
+                )
+            }
+
+            accountLedgerGistV2.accountLedgerPages.add(localAccountLedgerPage)
+        }
+
+        val accountLedgerGistTextV2: String = Json.encodeToString(
+            AccountLedgerGistModelV2.serializer(),
+            accountLedgerGistV2
         )
         if (isDevelopmentMode) {
 
-            println("Gist Data : $accountLedgerGistText")
+            println("Gist Data V2 : $accountLedgerGistTextV2")
         }
-        return accountLedgerGistText
+
+        return accountLedgerGistTextV2
     }
 }
