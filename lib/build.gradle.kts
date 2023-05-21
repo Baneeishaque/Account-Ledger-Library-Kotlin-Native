@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+
 plugins {
     // TODO : Use BoM
     val kotlinVersion = "1.9.20-dev-947"
@@ -9,29 +11,23 @@ plugins {
 group = "ndk.banee"
 version = "1.0-SNAPSHOT"
 
+@OptIn(ExperimentalKotlinGradlePluginApi::class)
 kotlin {
 
-//    targetHierarchy.default()
+    targetHierarchy.default()
 
     jvm {
-        jvmToolchain(20)
+//        jvmToolchain(20)
+        testRuns["test"].executionTask.configure {
+            useJUnitPlatform()
+        }
     }
 
-    val hostOs = System.getProperty("os.name")
-    val isArm64 = System.getProperty("os.arch") == "aarch64"
-    val isMingwX64 = hostOs.startsWith("Windows")
-    val nativeTarget = when {
-        hostOs == "Mac OS X" && isArm64 -> macosArm64("native")
-        hostOs == "Mac OS X" && !isArm64 -> macosX64("native")
-        hostOs == "Linux" && isArm64 -> linuxArm64("native")
-        hostOs == "Linux" && !isArm64 -> linuxX64("native")
-        isMingwX64 -> mingwX64("native")
-        else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
-    }
-    nativeTarget.apply {
+    mingwX64 {
         binaries {
             sharedLib {
-                baseName = "native"
+                //TODO : Rename sub module to avoid basename property
+                baseName = "account_ledger_lib"
             }
         }
     }
@@ -65,17 +61,11 @@ kotlin {
                 implementation(kotlin("test"))
             }
         }
-        val nativeMain by getting {
+        val mingwX64Main by getting {
             dependencies {
 //                implementation("io.ktor:ktor-client-curl:$ktorVersion")
                 implementation("io.ktor:ktor-client-winhttp:$ktorVersion")
             }
         }
-        val nativeTest by getting
     }
-}
-
-val nativeProcessResources by tasks.getting(ProcessResources::class) {
-
-    exclude(".gitkeep")
 }

@@ -4,7 +4,7 @@
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
     <option name="PARENT_ENVS" value="true" />
     <module name="" />
-    <option name="SCRIPT_NAME" value="./lib/build/bin/native/debugShared/main.exe" />
+    <option name="SCRIPT_NAME" value="./lib/build/bin/mingwX64/debugShared/main.exe" />
     <option name="PARAMETERS" value="" />
     <method v="2">
       <option name="RunConfigurationTask" enabled="true" run_configuration_name="Compile main.c" run_configuration_type="PowerShellRunType" />
