@@ -1,5 +1,4 @@
 plugins {
-//    val kotlinVersion = "1.8.10"
     // TODO : Use BoM
     val kotlinVersion = "1.9.20-dev-947"
 //    val kotlinVersion = "1.9.20-mercury-653"
@@ -47,7 +46,6 @@ kotlin {
     sourceSets {
         // TODO : Use BoM
         val ktorVersion = "2.3.1-eap-674"
-//        val ktorVersion = "2.3.0"
         val commonMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
