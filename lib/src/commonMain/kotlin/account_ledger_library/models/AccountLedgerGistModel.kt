@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class AccountLedgerGistModel(
     @Required val userName: String,
+    @Required val userId: UInt,
     //TODO : Include A/C Name
     @Required val accountLedgerPages: LinkedHashMap<UInt, LinkedHashMap<String, AccountLedgerGistDateLedgerModel>>
 )
@@ -13,6 +14,7 @@ data class AccountLedgerGistModel(
 @Serializable
 data class AccountLedgerGistModelV2(
     @Required val userName: String,
+    @Required val userId: UInt,
     @Required val accountLedgerPages: MutableList<AccountLedgerPage>
 )
 

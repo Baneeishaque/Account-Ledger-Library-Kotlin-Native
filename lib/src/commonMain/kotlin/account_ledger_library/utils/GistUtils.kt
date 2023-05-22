@@ -18,6 +18,7 @@ class GistUtils {
     fun processGistIdForData(
 
         userName: String,
+        userId: UInt,
         gitHubAccessToken: String,
         gistId: String,
         isDevelopmentMode: Boolean,
@@ -25,7 +26,8 @@ class GistUtils {
 
     ): AccountLedgerGistModel {
 
-        val accountLedgerGist = AccountLedgerGistModel(userName = userName, accountLedgerPages = LinkedHashMap())
+        val accountLedgerGist =
+            AccountLedgerGistModel(userName = userName, userId = userId, accountLedgerPages = LinkedHashMap())
         runBlocking {
 
             CommonGistUtils.getHttpClientForGitHub(
@@ -55,6 +57,7 @@ class GistUtils {
                     if (isExecutionSuccess) {
 
                         if (isDevelopmentMode) {
+                            println()
 //                            println("Current line = $currentLine")
 //                            println("currentAccountId = $currentAccountId")
                         }
@@ -231,6 +234,7 @@ class GistUtils {
                             serializer = AccountLedgerGistModelForJson.serializer(),
                             value = AccountLedgerGistModelForJson(
                                 userName = userName,
+                                userId = userId,
                                 accountLedgerPages = accountLedgerGistAccounts
                             )
                         )
@@ -244,6 +248,7 @@ class GistUtils {
     fun processGistIdForTextData(
 
         userName: String,
+        userId: UInt,
         gitHubAccessToken: String,
         gistId: String,
         isDevelopmentMode: Boolean,
@@ -251,8 +256,14 @@ class GistUtils {
 
     ): String {
 
-        val accountLedgerGist =
-            processGistIdForData(userName, gitHubAccessToken, gistId, isDevelopmentMode, isApiCall)
+        val accountLedgerGist = processGistIdForData(
+            userName = userName,
+            userId = userId,
+            gitHubAccessToken = gitHubAccessToken,
+            gistId = gistId,
+            isDevelopmentMode = isDevelopmentMode,
+            isApiCall = isApiCall,
+        )
         if (isDevelopmentMode) {
 
             println(
@@ -267,6 +278,7 @@ class GistUtils {
 
         val accountLedgerGistV2 = AccountLedgerGistModelV2(
             userName = accountLedgerGist.userName,
+            userId = userId,
             accountLedgerPages = mutableListOf()
         )
 

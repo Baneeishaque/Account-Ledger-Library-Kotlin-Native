@@ -5,7 +5,7 @@ import common_utils_library.constants.CommonConstants
 object Constants {
 
     const val defaultValueForStringEnvironmentVariables: String = "N/A"
-    internal const val defaultValueForIntegerEnvironmentVariables: Int = 0
+    const val defaultValueForIntegerEnvironmentVariables: Int = 0
     const val accountText: String = "Account"
     const val userText: String = "User"
     const val frequencyOfAccountsFileName = "frequencyOfAccounts.json"

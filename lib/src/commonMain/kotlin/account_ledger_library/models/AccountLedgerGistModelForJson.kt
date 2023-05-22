@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class AccountLedgerGistModelForJson(
     @Required val userName: String,
+    @Required val userId: UInt,
     @Required val accountLedgerPages: MutableList<AccountLedgerGistAccountModel>
 )
 
