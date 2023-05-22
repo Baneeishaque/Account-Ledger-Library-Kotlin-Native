@@ -113,7 +113,7 @@ class GistUtils {
 
                         accountLedgerGist.accountLedgerPages[localCurrentAccountId] = LinkedHashMap()
 
-                        if (isDevelopmentMode && (localCurrentAccountId == 8799U)) {
+                        if (isDevelopmentMode && (localCurrentAccountId == 8809U)) {
                             println()
                         }
 
@@ -172,7 +172,10 @@ class GistUtils {
                                     } catch (_: Exception) {
 
                                         val transactionAmount: Double =
-                                            if (dateOrAmount == "0") 0.0 else (if (dateOrAmount.contains(char = '+')) dateOrAmount.toDouble() else -(dateOrAmount.toDouble()))
+                                            if (dateOrAmount == "0") 0.0 else (if (dateOrAmount.contains(char = '+')) dateOrAmount.toDouble() else (if (dateOrAmount.contains(
+                                                    char = '-'
+                                                )
+                                            ) dateOrAmount.toDouble() else -(dateOrAmount.toDouble())))
                                         val transactionParticulars: String = ledgerLineContents[1]
 
                                         val transactionDateAsText: String =

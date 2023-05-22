@@ -17,7 +17,7 @@ object Constants {
     const val bankAccountHeaderIdentifier: String = "PNB"
     const val accountHeaderUnderlineCharacter: Char = '~'
     const val accountBalanceHolderOpeningBrace: Char = '{'
-    const val dateUnderlineCharacter: Char = '-'
+    const val dateUnderlineCharacter: Char = '~'
     const val finalBalancePrefixCharacter: Char = '='
 
     const val timeResetCommandIndicator = "Tr"
