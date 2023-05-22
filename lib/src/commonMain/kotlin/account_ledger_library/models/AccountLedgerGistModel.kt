@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class AccountLedgerGistModel(
     @Required val userName: String,
+    //TODO : Include A/C Name
     @Required val accountLedgerPages: LinkedHashMap<UInt, LinkedHashMap<String, AccountLedgerGistDateLedgerModel>>
 )
 
@@ -24,9 +25,9 @@ data class AccountLedgerPage(
 @Serializable
 data class TransactionDatePage(
     @Required val transactionDate: String,
-    @Required val initialBalance: Double,
-    @Required val transactions: List<AccountLedgerGistTransactionModel>,
-    @Required val finalBalance: Double
+    @Required val initialBalance: Double?,
+    @Required val transactions: List<AccountLedgerGistTransactionModel>?,
+    @Required val finalBalance: Double?
 )
 
 @Serializable

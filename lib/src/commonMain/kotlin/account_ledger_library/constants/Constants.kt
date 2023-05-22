@@ -15,10 +15,10 @@ object Constants {
 
     //    internal const val bankAccountHeaderIdentifier: String = "Bank"
     const val bankAccountHeaderIdentifier: String = "PNB"
-    const val accountHeaderUnderlineCharacter: String = "~"
-    const val accountBalanceHolderOpeningBrace: String = "{"
+    const val accountHeaderUnderlineCharacter: Char = '~'
+    const val accountBalanceHolderOpeningBrace: Char = '{'
     const val dateUnderlineCharacter: Char = '-'
-    const val finalBalancePrefixCharacter: String = "="
+    const val finalBalancePrefixCharacter: Char = '='
 
     const val timeResetCommandIndicator = "Tr"
     val timeResetPatternRegex: Regex = Regex("$timeResetCommandIndicator${CommonConstants.railwayTimeRegexPattern}");
@@ -41,4 +41,7 @@ object Constants {
 
     val dayIncrementOrDecrementWithTimeResetPatternRegex =
         Regex("($dayIncrementOrDecrementCommandIndicator${CommonConstants.digitIncrementOrDecrementRegexPattern})($timeResetCommandIndicator${CommonConstants.railwayTimeRegexPattern})")
+
+    const val accountIdPrefix = '['
+    const val accountIdSuffix = ']'
 }
