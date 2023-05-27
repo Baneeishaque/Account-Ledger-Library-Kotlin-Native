@@ -1,8 +1,6 @@
 package account_ledger_library.utils
 
-import account_ledger_library.constants.Constants
-import account_ledger_library.constants.Constants.accountIdPrefix
-import account_ledger_library.constants.Constants.accountIdSuffix
+import account_ledger_library.constants.ConstantsNative
 import account_ledger_library.models.*
 import com.soywiz.klock.Date
 import com.soywiz.klock.DateTime
@@ -62,11 +60,11 @@ class GistUtils {
 //                            println("currentAccountId = $currentAccountId")
                         }
 
-                        if (currentLine.contains(accountIdPrefix)) {
+                        if (currentLine.contains(ConstantsNative.accountIdPrefix)) {
                             currentAccountId =
                                 currentLine.substring(
-                                    currentLine.indexOf(accountIdPrefix) + 1, currentLine.indexOf(
-                                        accountIdSuffix
+                                    currentLine.indexOf(ConstantsNative.accountIdPrefix) + 1, currentLine.indexOf(
+                                        ConstantsNative.accountIdSuffix
                                     )
                                 ).toUInt()
                             if (currentAccountId == 0U) {
@@ -75,7 +73,7 @@ class GistUtils {
                                     "Error : Account ID Must be a positive number, please correct it in your Gist Text for A/C {${
                                         currentLine.substring(
                                             0, currentLine.indexOf(
-                                                accountIdPrefix
+                                                ConstantsNative.accountIdPrefix
                                             )
                                         ).trim()
                                     }}"
@@ -95,7 +93,7 @@ class GistUtils {
                                 extractedLedger = TextAccountLedgerUtils.addLineToCurrentAccountLedger(
                                     ledgerToProcess = extractedLedger,
                                     desiredAccountId = currentAccountId,
-                                    desiredLine = currentLine.substring(currentLine.indexOf(accountIdSuffix) + 2)
+                                    desiredLine = currentLine.substring(currentLine.indexOf(ConstantsNative.accountIdSuffix) + 2)
                                 )
                             }
                         } else {
@@ -125,9 +123,9 @@ class GistUtils {
 
                         currentAccountLedgerLines.forEach { ledgerLine: String ->
 
-                            if (ledgerLine.first() != Constants.dateUnderlineCharacter) {
+                            if (ledgerLine.first() != ConstantsNative.dateUnderlineCharacter) {
 
-                                if (ledgerLine.first() == Constants.finalBalancePrefixCharacter) {
+                                if (ledgerLine.first() == ConstantsNative.finalBalancePrefixCharacter) {
 
                                     isNextLineFinalBalance = true
 

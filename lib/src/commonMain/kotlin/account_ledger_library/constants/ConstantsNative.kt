@@ -1,8 +1,8 @@
 package account_ledger_library.constants
 
-import common_utils_library.constants.CommonConstants
+import common_utils_library.constants.ConstantsCommonNative
 
-object Constants {
+object ConstantsNative {
 
     const val defaultValueForStringEnvironmentVariables: String = "N/A"
     const val defaultValueForIntegerEnvironmentVariables: Int = 0
@@ -21,26 +21,26 @@ object Constants {
     const val finalBalancePrefixCharacter: Char = '='
 
     const val timeResetCommandIndicator = "Tr"
-    val timeResetPatternRegex: Regex = Regex("$timeResetCommandIndicator${CommonConstants.railwayTimeRegexPattern}");
+    val timeResetPatternRegex: Regex = Regex("$timeResetCommandIndicator${ConstantsCommonNative.railwayTimeRegexPattern}");
 
     const val hourIncrementOrDecrementCommandIndicator = "H"
     val hourIncrementOrDecrementPatternRegex: Regex =
-        Regex("$hourIncrementOrDecrementCommandIndicator${CommonConstants.digitIncrementOrDecrementRegexPattern}")
+        Regex("$hourIncrementOrDecrementCommandIndicator${ConstantsCommonNative.digitIncrementOrDecrementRegexPattern}")
 
     const val minuteIncrementOrDecrementCommandIndicator = "M"
     val minuteIncrementOrDecrementPatternRegex: Regex =
-        Regex("$minuteIncrementOrDecrementCommandIndicator${CommonConstants.digitIncrementOrDecrementRegexPattern}")
+        Regex("$minuteIncrementOrDecrementCommandIndicator${ConstantsCommonNative.digitIncrementOrDecrementRegexPattern}")
 
     const val secondIncrementOrDecrementCommandIndicator = "S"
     val secondIncrementOrDecrementPatternRegex: Regex =
-        Regex("$secondIncrementOrDecrementCommandIndicator${CommonConstants.digitIncrementOrDecrementRegexPattern}")
+        Regex("$secondIncrementOrDecrementCommandIndicator${ConstantsCommonNative.digitIncrementOrDecrementRegexPattern}")
 
     const val dayIncrementOrDecrementCommandIndicator = "D"
     val dayIncrementOrDecrementPatternRegex: Regex =
-        Regex("$dayIncrementOrDecrementCommandIndicator${CommonConstants.digitIncrementOrDecrementRegexPattern}")
+        Regex("$dayIncrementOrDecrementCommandIndicator${ConstantsCommonNative.digitIncrementOrDecrementRegexPattern}")
 
     val dayIncrementOrDecrementWithTimeResetPatternRegex =
-        Regex("($dayIncrementOrDecrementCommandIndicator${CommonConstants.digitIncrementOrDecrementRegexPattern})($timeResetCommandIndicator${CommonConstants.railwayTimeRegexPattern})")
+        Regex("($dayIncrementOrDecrementCommandIndicator${ConstantsCommonNative.digitIncrementOrDecrementRegexPattern})($timeResetCommandIndicator${ConstantsCommonNative.railwayTimeRegexPattern})")
 
     const val accountIdPrefix = '['
     const val accountIdSuffix = ']'

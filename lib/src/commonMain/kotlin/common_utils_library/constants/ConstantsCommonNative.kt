@@ -1,6 +1,6 @@
 package common_utils_library.constants
 
-object CommonConstants {
+object ConstantsCommonNative {
 
     //    TODO : Control width via function parameter
     const val dashedLineSeparator: String = "---------------------------------------------------"
