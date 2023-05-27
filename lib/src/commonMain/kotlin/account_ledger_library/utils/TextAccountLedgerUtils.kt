@@ -1,4 +1,4 @@
-package account_ledger_library.utils;
+package account_ledger_library.utils
 
 import kotlin.jvm.JvmStatic
 

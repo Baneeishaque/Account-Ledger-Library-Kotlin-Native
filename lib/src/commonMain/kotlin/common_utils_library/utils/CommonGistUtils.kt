@@ -47,7 +47,7 @@ object CommonGistUtils {
 //    @JvmStatic
     fun getGistContents(client: HttpClient, gistId: String, isDevelopmentMode: Boolean): Root {
 
-        var gistResponse: Root = Root(files = Files(mainTxt = MainTxt(content = "")))
+        var gistResponse = Root(files = Files(mainTxt = MainTxt(content = "")))
 
         runBlocking {
 

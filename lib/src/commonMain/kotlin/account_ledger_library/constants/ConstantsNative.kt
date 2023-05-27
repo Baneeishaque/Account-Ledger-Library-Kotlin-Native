@@ -21,7 +21,7 @@ object ConstantsNative {
     const val finalBalancePrefixCharacter: Char = '='
 
     const val timeResetCommandIndicator = "Tr"
-    val timeResetPatternRegex: Regex = Regex("$timeResetCommandIndicator${ConstantsCommonNative.railwayTimeRegexPattern}");
+    val timeResetPatternRegex: Regex = Regex("$timeResetCommandIndicator${ConstantsCommonNative.railwayTimeRegexPattern}")
 
     const val hourIncrementOrDecrementCommandIndicator = "H"
     val hourIncrementOrDecrementPatternRegex: Regex =

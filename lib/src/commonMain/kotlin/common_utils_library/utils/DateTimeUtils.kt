@@ -11,7 +11,7 @@ import com.soywiz.klock.PatternDateFormat
 object DateTimeUtils {
 
     //    @JvmStatic
-    val normalDateTimePatternAsText = "dd/MM/yyyy HH:mm:ss"
+    const val normalDateTimePatternAsText = "dd/MM/yyyy HH:mm:ss"
 
 //    @JvmStatic
 //    val normalDateTimePattern: DateTimeFormatter = ofPattern(normalDateTimePatternAsText)!!
