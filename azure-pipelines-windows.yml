@@ -1,0 +1,25 @@
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  GRADLE_USER_HOME: $(Pipeline.Workspace)/.gradle
+
+steps:
+  - checkout: self
+    submodules: recursive
+
+  - task: Cache@2.198.0
+    inputs:
+      key: 'gradle | "$(Agent.OS)"'
+      restoreKeys: gradle
+      path: $(GRADLE_USER_HOME)
+    displayName: Gradle Build Cache
+
+  - task: Gradle@3.208.0
+    displayName: 'Gradle Build : Shared Library for MinGW-w64'
+    inputs:
+      gradleOptions: '-Xmx3072m'
+      tasks: linkDebugSharedMingwX64
+
+  - script: 'gradlew --stop'
+    displayName: Stop Gradle Daemon
