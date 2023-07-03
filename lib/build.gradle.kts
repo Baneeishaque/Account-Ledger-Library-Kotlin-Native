@@ -1,11 +1,8 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
-    // TODO : Use BoM
-    val kotlinVersion = "1.9.20-dev-2244"
-//    val kotlinVersion = "1.9.20-mercury-653"
-    kotlin("multiplatform") version kotlinVersion
-    kotlin("plugin.serialization") version kotlinVersion
+    kotlin("multiplatform")
+    kotlin("plugin.serialization")
 }
 
 group = "ndk.banee"
