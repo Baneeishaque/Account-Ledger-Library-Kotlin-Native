@@ -49,7 +49,7 @@ kotlin {
                 implementation("io.ktor:ktor-client-content-negotiation")
                 implementation("io.ktor:ktor-client-logging")
                 implementation("io.ktor:ktor-serialization-kotlinx-json")
-                implementation("com.soywiz.korlibs.klock:klock:2.2.0")
+                implementation("com.soywiz.korlibs.klock:klock:2.7.0")
             }
         }
         val commonTest by getting {
