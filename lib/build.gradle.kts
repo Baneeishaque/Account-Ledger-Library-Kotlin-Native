@@ -42,7 +42,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
                 implementation(platform("io.ktor:ktor-bom:3.0.0-eap-780"))
                 implementation("io.ktor:ktor-client-core")
                 implementation("io.ktor:ktor-client-auth")
