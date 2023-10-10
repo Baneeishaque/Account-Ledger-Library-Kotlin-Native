@@ -8,6 +8,8 @@ plugins {
 group = "ndk.banee"
 version = "1.0-SNAPSHOT"
 
+val BASE_NAME = "account_ledger_lib"
+
 @OptIn(ExperimentalKotlinGradlePluginApi::class)
 kotlin {
 
@@ -24,9 +26,17 @@ kotlin {
         binaries {
             sharedLib {
                 //TODO : Rename sub module to avoid basename property
-                baseName = "account_ledger_lib"
+                baseName = BASE_NAME
             }
         }
+    }
+
+    linuxX64 {
+        binaries {
+            sharedLib {
+                baseName = BASE_NAME
+            }
+        } 
     }
 
     sourceSets.all {
@@ -61,6 +71,12 @@ kotlin {
             dependencies {
 //                implementation("io.ktor:ktor-client-curl")
                 implementation("io.ktor:ktor-client-winhttp")
+            }
+        }
+        val linuxX64Main by getting {
+            dependencies {
+                implementation("io.ktor:ktor-client-curl")
+                // implementation("io.ktor:ktor-client-cio")
             }
         }
     }

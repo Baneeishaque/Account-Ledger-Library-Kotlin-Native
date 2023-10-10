@@ -1,0 +1,2 @@
+./compileMainCFile.bash
+./a.out
