@@ -1,7 +1,7 @@
 package common_utils_library.utils
 
-import com.soywiz.klock.DateFormat
-import com.soywiz.klock.PatternDateFormat
+import korlibs.time.DateFormat
+import korlibs.time.PatternDateFormat
 
 //import java.time.LocalDateTime
 //import java.time.format.DateTimeFormatter
