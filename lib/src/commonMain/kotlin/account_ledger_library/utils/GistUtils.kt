@@ -114,10 +114,6 @@ class GistUtils {
 
                         accountLedgerGist.accountLedgerPages[localCurrentAccountId] = LinkedHashMap()
 
-                        if (isDevelopmentMode && (localCurrentAccountId == 8809U)) {
-                            println()
-                        }
-
                         var isNextLineFinalBalance = false
                         var previousDate: Date = DateTime.now().date
 
@@ -134,10 +130,6 @@ class GistUtils {
                                     val finalBalance: Double = ledgerLine.trim().toDouble()
                                     val transactionDateAsText: String =
                                         previousDate.format(DateTimeUtils.normalDatePattern)
-
-                                    if (isDevelopmentMode && (finalBalance == 3.52)) {
-                                        println()
-                                    }
 
                                     accountLedgerGist.accountLedgerPages[localCurrentAccountId]!![transactionDateAsText]!!.finalBalanceOnDate =
                                         finalBalance
@@ -188,9 +180,6 @@ class GistUtils {
                                                 transactionAmount = transactionAmount
                                             )
                                         )
-                                        if (isDevelopmentMode) {
-                                            println()
-                                        }
                                     }
                                 }
                             }
