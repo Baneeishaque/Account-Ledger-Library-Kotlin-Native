@@ -126,7 +126,19 @@ class GistUtils {
 
                                 } else if (isNextLineFinalBalance) {
 
-                                    val finalBalance: Double = ledgerLine.trim().toDouble()
+                                    if (isDevelopmentMode) {
+                                        println("ledgerLine = $ledgerLine")
+                                        if(ledgerLine.trim().contains(char = ' ')){
+                                            val endIndex = ledgerLine.indexOf(char = ' ')
+                                            println("endIndex = $endIndex")
+                                            println("actual value : ${ledgerLine.substring(0, endIndex)}")
+                                        }
+                                    }
+
+                                    val finalBalance: Double = (
+                                            if (ledgerLine.trim().contains(char = ' '))
+                                                ledgerLine.substring(0, ledgerLine.indexOf(char = ' '))
+                                            else ledgerLine).toDouble()
                                     val transactionDateAsText: String =
                                         previousDate.format(DateTimeUtils.normalDatePattern)
 
