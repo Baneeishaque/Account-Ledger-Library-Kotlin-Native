@@ -55,9 +55,8 @@ class GistUtils {
                     if (isExecutionSuccess) {
 
                         if (isDevelopmentMode) {
-                            println()
-//                            println("Current line = $currentLine")
-//                            println("currentAccountId = $currentAccountId")
+                            println("Current line = $currentLine")
+                            println("currentAccountId = $currentAccountId")
                         }
 
                         if (currentLine.contains(ConstantsNative.accountIdPrefix)) {
