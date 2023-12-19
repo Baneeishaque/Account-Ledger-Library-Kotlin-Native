@@ -115,6 +115,8 @@ class GistUtils {
 
                         var isNextLineFinalBalance = false
                         var previousDate: Date = DateTime.now().date
+                        var isFinalBalanceWritten = false
+                        var finalBalanceWrittenDate: Date = DateTime.now().date
 
                         currentAccountLedgerLines.forEach { ledgerLine: String ->
 
@@ -128,7 +130,7 @@ class GistUtils {
 
                                     if (isDevelopmentMode) {
                                         println("ledgerLine = $ledgerLine")
-                                        if(ledgerLine.trim().contains(char = ' ')){
+                                        if (ledgerLine.trim().contains(char = ' ')) {
                                             val endIndex = ledgerLine.indexOf(char = ' ')
                                             println("endIndex = $endIndex")
                                             println("actual value : ${ledgerLine.substring(0, endIndex)}")
@@ -144,6 +146,8 @@ class GistUtils {
 
                                     accountLedgerGist.accountLedgerPages[localCurrentAccountId]!![transactionDateAsText]!!.finalBalanceOnDate =
                                         finalBalance
+                                    isFinalBalanceWritten = true
+                                    finalBalanceWrittenDate = previousDate
 
                                     isNextLineFinalBalance = false
 
@@ -191,6 +195,13 @@ class GistUtils {
                                                 transactionAmount = transactionAmount
                                             )
                                         )
+
+                                        if (isFinalBalanceWritten && (finalBalanceWrittenDate == previousDate)) {
+
+                                            accountLedgerGist.accountLedgerPages[localCurrentAccountId]!![transactionDateAsText]!!.finalBalanceOnDate =
+                                                null
+                                            isFinalBalanceWritten = false
+                                        }
                                     }
                                 }
                             }
