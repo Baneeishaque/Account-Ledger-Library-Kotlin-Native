@@ -31,13 +31,13 @@ kotlin {
         }
     }
 
-    linuxX64 {
+    /*linuxX64 {
         binaries {
             sharedLib {
                 baseName = BASE_NAME
             }
         } 
-    }
+    }*/
 
     sourceSets.all {
         languageSettings.apply {
@@ -73,11 +73,11 @@ kotlin {
                 implementation("io.ktor:ktor-client-winhttp")
             }
         }
-        val linuxX64Main by getting {
+        /*val linuxX64Main by getting {
             dependencies {
                 implementation("io.ktor:ktor-client-curl")
                 // implementation("io.ktor:ktor-client-cio")
             }
-        }
+        }*/
     }
 }
