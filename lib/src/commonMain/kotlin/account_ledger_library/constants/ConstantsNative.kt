@@ -4,11 +4,14 @@ import common_utils_library.constants.ConstantsCommonNative
 
 object ConstantsNative {
 
+    const val TRANSACTION_TEXT: String = "Transaction"
     const val defaultValueForStringEnvironmentVariables: String = "N/A"
     const val defaultValueForIntegerEnvironmentVariables: Int = 0
     const val accountText: String = "Account"
+    const val SPECIAL_TRANSACTION_TYPE_TEXT: String = "Special Transaction Type"
     const val userText: String = "User"
     const val frequencyOfAccountsFileName = "frequencyOfAccounts.json"
+    const val SPECIAL_TRANSACTION_TYPES_FILE_NAME = "specialTransactionTypes.json"
     const val transactionText: String = "Transaction"
     const val accountHeaderIdentifier: String = "A/C Ledger "
     const val walletAccountHeaderIdentifier: String = "Wallet"
