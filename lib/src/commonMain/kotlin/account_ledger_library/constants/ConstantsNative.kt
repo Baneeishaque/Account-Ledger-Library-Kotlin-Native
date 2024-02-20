@@ -48,4 +48,8 @@ object ConstantsNative {
 
     const val accountIdPrefix = '['
     const val accountIdSuffix = ']'
+
+    const val BAJAJ_COINS_INCOME_ACCOUNT_ID = "Bajaj-Coins-Income-Account ID"
+    const val BAJAJ_COINS_WALLET_ACCOUNT_ID = "Bajaj-Coins-Wallet-Account ID"
+    const val BAJAJ_COINS_CONVERSION_RATE = "Bajaj-Coins-Conversion-Rate"
 }
