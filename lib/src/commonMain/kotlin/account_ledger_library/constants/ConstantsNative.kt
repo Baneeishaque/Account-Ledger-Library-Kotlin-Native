@@ -9,11 +9,12 @@ object ConstantsNative {
     const val defaultValueForStringEnvironmentVariables: String = "N/A"
     const val defaultValueForIntegerEnvironmentVariables: Int = 0
     const val accountText: String = "Account"
-    const val SPECIAL_TRANSACTION_TYPE_TEXT: String = "Special Transaction Type"
+    const val SPECIAL_TEXT = "Special"
+    const val TYPE_TEXT = "Type"
+    const val SPECIAL_TRANSACTION_TYPE_TEXT: String = "$SPECIAL_TEXT $TRANSACTION_TEXT $TYPE_TEXT"
     const val userText: String = "User"
-    const val frequencyOfAccountsFileName = "frequencyOfAccounts.json"
-    const val SPECIAL_TRANSACTION_TYPES_FILE_NAME = "specialTransactionTypes.json"
-    const val transactionText: String = "Transaction"
+    const val frequencyOfAccountsFileName = "frequencyOf${accountText}s.json"
+    val SPECIAL_TRANSACTION_TYPES_FILE_NAME = "${SPECIAL_TEXT.lowercase()}${TRANSACTION_TEXT}${TYPE_TEXT}s.json"
     const val accountHeaderIdentifier: String = "A/C Ledger "
     const val walletAccountHeaderIdentifier: String = "Wallet"
 
@@ -50,7 +51,13 @@ object ConstantsNative {
     const val accountIdPrefix = '['
     const val accountIdSuffix = ']'
 
-    const val BAJAJ_COINS_INCOME_ACCOUNT_ID = "Bajaj-Coins-Income-Account ID"
-    const val BAJAJ_COINS_WALLET_ACCOUNT_ID = "Bajaj-Coins-Wallet-Account ID"
-    const val BAJAJ_COINS_CONVERSION_RATE = "Bajaj-Coins-Conversion-Rate"
+    const val ID_TEXT = "ID"
+    const val BAJAJ_COINS_TEXT = "Bajaj-Coins"
+    const val BAJAJ_COINS_INCOME_TEXT = "$BAJAJ_COINS_TEXT-Income"
+    const val BAJAJ_COINS_INCOME_ACCOUNT_ID_TEXT = "$BAJAJ_COINS_INCOME_TEXT-$accountText $ID_TEXT"
+    const val BAJAJ_COINS_WALLET_TEXT = "$BAJAJ_COINS_TEXT-Wallet"
+    const val BAJAJ_COINS_WALLET_ACCOUNT_ID_TEXT = "$BAJAJ_COINS_WALLET_TEXT-$accountText $ID_TEXT"
+    const val BAJAJ_COINS_CONVERSION_RATE_TEXT = "$BAJAJ_COINS_TEXT-Conversion-Rate"
+
+    const val USER_CANCELLED_TRANSACTION_TEXT = "${ConstantsCommonNative.USER_CANCELLED_TEXT} $TRANSACTION_TEXT"
 }
