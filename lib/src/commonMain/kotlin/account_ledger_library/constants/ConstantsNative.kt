@@ -2,6 +2,7 @@ package account_ledger_library.constants
 
 import common_utils_library.constants.ConstantsCommonNative
 
+
 object ConstantsNative {
 
     const val TRANSACTION_TEXT: String = "Transaction"
