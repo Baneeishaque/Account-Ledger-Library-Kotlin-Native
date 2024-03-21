@@ -60,4 +60,6 @@ object ConstantsNative {
     const val BAJAJ_COINS_CONVERSION_RATE_TEXT = "$BAJAJ_COINS_TEXT-Conversion-Rate"
 
     const val USER_CANCELLED_TRANSACTION_TEXT = "${ConstantsCommonNative.USER_CANCELLED_TEXT} $TRANSACTION_TEXT"
+
+    const val DATE_FROM_USERNAME_ERROR = "Error: Can't derive date from username..."
 }
