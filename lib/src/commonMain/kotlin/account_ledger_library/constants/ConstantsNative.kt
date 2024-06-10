@@ -52,6 +52,7 @@ object ConstantsNative {
     const val accountIdSuffix = ']'
 
     const val ID_TEXT = "ID"
+
     const val BAJAJ_COINS_TEXT = "Bajaj-Coins"
     const val BAJAJ_COINS_INCOME_TEXT = "$BAJAJ_COINS_TEXT-Income"
     const val BAJAJ_COINS_INCOME_ACCOUNT_ID_TEXT = "$BAJAJ_COINS_INCOME_TEXT-$accountText $ID_TEXT"
