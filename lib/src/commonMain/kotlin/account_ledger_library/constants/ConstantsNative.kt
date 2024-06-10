@@ -54,13 +54,29 @@ object ConstantsNative {
     const val ID_TEXT = "ID"
 
     const val BAJAJ_COINS_TEXT = "Bajaj-Coins"
-    const val BAJAJ_COINS_INCOME_TEXT = "$BAJAJ_COINS_TEXT-Income"
-    const val BAJAJ_COINS_INCOME_ACCOUNT_ID_TEXT = "$BAJAJ_COINS_INCOME_TEXT-$accountText $ID_TEXT"
+    val BAJAJ_COINS_INCOME_TEXT: String = generateIncomeText(accountSpecifier = BAJAJ_COINS_TEXT)
+    val BAJAJ_COINS_INCOME_ACCOUNT_ID_TEXT: String = generateAccountIdText(accountSpecifier = BAJAJ_COINS_INCOME_TEXT)
     const val BAJAJ_COINS_WALLET_TEXT = "$BAJAJ_COINS_TEXT-Wallet"
-    const val BAJAJ_COINS_WALLET_ACCOUNT_ID_TEXT = "$BAJAJ_COINS_WALLET_TEXT-$accountText $ID_TEXT"
+    val BAJAJ_COINS_WALLET_ACCOUNT_ID_TEXT: String = generateAccountIdText(accountSpecifier = BAJAJ_COINS_WALLET_TEXT)
     const val BAJAJ_COINS_CONVERSION_RATE_TEXT = "$BAJAJ_COINS_TEXT-Conversion-Rate"
+
+    const val BAJAJ_SUB_WALLET_TEXT = "Bajaj-Sub-Wallet"
+    val BAJAJ_SUB_WALLET_INCOME_TEXT: String = generateIncomeText(accountSpecifier = BAJAJ_SUB_WALLET_TEXT)
+    val BAJAJ_SUB_WALLET_INCOME_ACCOUNT_ID_TEXT: String =
+        generateAccountIdText(accountSpecifier = BAJAJ_SUB_WALLET_INCOME_TEXT)
+    val BAJAJ_SUB_WALLET_ACCOUNT_ID_TEXT: String = generateAccountIdText(accountSpecifier = BAJAJ_SUB_WALLET_TEXT)
 
     const val USER_CANCELLED_TRANSACTION_TEXT = "${ConstantsCommonNative.USER_CANCELLED_TEXT} $TRANSACTION_TEXT"
 
     const val DATE_FROM_USERNAME_ERROR = "Error: Can't derive date from username..."
+
+    fun generateAccountIdText(accountSpecifier: String): String {
+
+        return "$accountSpecifier-$accountText $ID_TEXT"
+    }
+
+    fun generateIncomeText(accountSpecifier: String): String {
+
+        return "$accountSpecifier-Income"
+    }
 }
