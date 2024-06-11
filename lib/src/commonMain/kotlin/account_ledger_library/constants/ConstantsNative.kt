@@ -70,6 +70,8 @@ object ConstantsNative {
 
     const val DATE_FROM_USERNAME_ERROR = "Error: Can't derive date from username..."
 
+    const val WITHOUT_FUNDING_TRANSACTION_TEXT = "(Without Funding $TRANSACTION_TEXT)"
+
     fun generateAccountIdText(accountSpecifier: String): String {
 
         return "$accountSpecifier-$accountText $ID_TEXT"
