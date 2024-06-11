@@ -15,6 +15,12 @@ steps:
       path: $(GRADLE_USER_HOME)
     displayName: Gradle Build Cache
 
+  - task: JavaToolInstaller@0
+    inputs:
+      versionSpec: '21'
+      jdkArchitectureOption: 'x64'
+      jdkSourceOption: 'PreInstalled'
+      
   - task: Gradle@3.208.0
     displayName: 'Gradle Build : Shared Library for MinGW-w64'
     inputs:
