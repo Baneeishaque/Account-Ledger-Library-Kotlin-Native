@@ -18,6 +18,7 @@ dependencyResolutionManagement {
         maven {
             url = uri("https://maven.pkg.jetbrains.space/public/p/ktor/eap")
         }
+        google()
     }
 }
 enableFeaturePreview("STABLE_CONFIGURATION_CACHE")

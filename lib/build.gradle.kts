@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
-    id ("com.android.library") version "8.4.0-alpha10"
+    alias(libs.plugins.androidLibrary)
 }
 
 group = "ndk.banee"
@@ -89,5 +89,14 @@ kotlin {
                 // implementation("io.ktor:ktor-client-cio")
             }
         }*/
+    }
+}
+
+android {
+    namespace = "account_ledger_library"
+    compileSdk = 34
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
