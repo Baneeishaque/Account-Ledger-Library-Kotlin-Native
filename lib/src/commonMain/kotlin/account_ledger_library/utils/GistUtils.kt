@@ -2,17 +2,20 @@ package account_ledger_library.utils
 
 import account_ledger_library.constants.ConstantsNative
 import account_ledger_library.models.*
-import common_utils_library.utils.CommonGistUtils
-import common_utils_library.utils.DateTimeUtils
+import common.utils.library.utils.CommonGistUtils
+import common.utils.library.utils.DateTimeUtils
+import common.utils.library.utils.KeyListUtils
 import io.ktor.utils.io.core.*
 import korlibs.time.Date
 import korlibs.time.DateTime
 import korlibs.time.parseDate
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
+import kotlin.jvm.JvmStatic
 
-class GistUtils {
+object GistUtils {
 
+    @JvmStatic
     fun processGistIdForData(
 
         userName: String,
@@ -89,19 +92,19 @@ class GistUtils {
                                 isExecutionSuccess = false
 
                             } else {
-                                extractedLedger = TextAccountLedgerUtils.addLineToCurrentAccountLedger(
-                                    ledgerToProcess = extractedLedger,
-                                    desiredAccountId = currentAccountId,
-                                    desiredLine = currentLine.substring(currentLine.indexOf(ConstantsNative.accountIdSuffix) + 2)
+                                extractedLedger = KeyListUtils.addElementToKeyListPair(
+                                    keyList = extractedLedger,
+                                    desiredKey = currentAccountId,
+                                    desiredElement = currentLine.substring(currentLine.indexOf(ConstantsNative.accountIdSuffix) + 2)
                                 )
                             }
                         } else {
 
                             if (currentLine.isNotEmpty()) {
-                                extractedLedger = TextAccountLedgerUtils.addLineToCurrentAccountLedger(
-                                    ledgerToProcess = extractedLedger,
-                                    desiredAccountId = currentAccountId,
-                                    desiredLine = currentLine
+                                extractedLedger = KeyListUtils.addElementToKeyListPair(
+                                    keyList = extractedLedger,
+                                    desiredKey = currentAccountId,
+                                    desiredElement = currentLine
                                 )
                             }
                         }
@@ -254,6 +257,7 @@ class GistUtils {
         return accountLedgerGist
     }
 
+    @JvmStatic
     fun processGistIdForTextData(
 
         userName: String,

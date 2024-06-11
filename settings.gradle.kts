@@ -1,5 +1,6 @@
 rootProject.name = "Account-Ledger-Library-Kotlin-Multiplatform"
-include("lib")
+include(":lib")
+include(":common-lib-multi-platform:lib")
 pluginManagement {
     repositories {
         mavenCentral()

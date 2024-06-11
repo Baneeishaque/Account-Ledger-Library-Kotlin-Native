@@ -1,8 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Compile main.c" type="PowerShellRunType" factoryName="PowerShell" scriptUrl="C:\Lab_Data\Account-Ledger-Library-Kotlin-Multiplatform\compileMainCFile.ps1" workingDirectory="C:\Lab_Data\Account-Ledger-Library-Kotlin-Multiplatform" executablePath="$PROJECT_DIR$/../../Windows/System32/WindowsPowerShell/v1.0/powershell.exe">
-    <envs>
-      <env name="JAVA_HOME" value="C:\Users\dk\.jabba\jdk\openjdk@20.0.1" />
-    </envs>
-    <method v="2" />
-  </configuration>
-</component>
