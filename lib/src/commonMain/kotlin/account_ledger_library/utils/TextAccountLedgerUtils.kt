@@ -15,6 +15,7 @@ object TextAccountLedgerUtils {
 
         val currentAccountLedgerLines: MutableList<String> =
             ledgerToProcess.getOrElse(
+
                 key = desiredAccountId,
                 defaultValue = fun(): MutableList<String> = mutableListOf(),
             )

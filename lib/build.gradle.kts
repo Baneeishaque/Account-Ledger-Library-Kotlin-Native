@@ -1,102 +1,180 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+import org.jetbrains.kotlin.konan.target.KonanTarget
 
 plugins {
-    kotlin("multiplatform")
-    kotlin("plugin.serialization")
-    alias(libs.plugins.androidLibrary)
+
+    kotlin(module = "multiplatform")
+    kotlin(module = "plugin.serialization")
+    alias(notation = libs.plugins.androidLibrary)
 }
 
 group = "ndk.banee"
 version = "1.0-SNAPSHOT"
 
-val BASE_NAME = "account_ledger_lib"
+val libraryName = "account_ledger_lib"
 
-@OptIn(ExperimentalKotlinGradlePluginApi::class)
 kotlin {
 
-    targetHierarchy.default()
+    applyDefaultHierarchyTemplate()
 
-    jvm {
-//        jvmToolchain(20)
-        testRuns["test"].executionTask.configure {
+    @OptIn(ExperimentalKotlinGradlePluginApi::class)
+    compilerOptions {
+
+//        allWarningsAsErrors = true
+        verbose = true
+
+        apiVersion = KotlinVersion.KOTLIN_2_2
+        languageVersion = KotlinVersion.KOTLIN_2_2
+    }
+
+    jvm().apply {
+
+        tasks.withType<Test>().configureEach {
+
             useJUnitPlatform()
         }
+
+        compilations.all {
+
+            compileTaskProvider.configure {
+
+                compilerOptions {
+
+                    javaParameters = true
+                    jvmTarget = JvmTarget.JVM_21
+                }
+            }
+        }
     }
 
-    androidTarget {
+    androidTarget().apply {
+
         publishAllLibraryVariants()
         compilations.all {
-            kotlinOptions {
-                jvmTarget = "17"
+
+            compileTaskProvider.configure {
+
+                compilerOptions {
+
+                    javaParameters = true
+                    jvmTarget = JvmTarget.JVM_21
+                }
             }
         }
     }
 
-    mingwX64 {
+    fun getNativeTarget(): KotlinNativeTarget {
+
+        val hostOs: String = System.getProperty("os.name")
+        val isArm64: Boolean = System.getProperty("os.arch") == "aarch64"
+        val isMingwX64: Boolean = hostOs.startsWith(prefix = "Windows")
+        return when {
+
+//        hostOs == "Mac OS X" && isArm64 -> KotlinNativeSupportedOs.MacOsArm64
+//        hostOs == "Mac OS X" && !isArm64 -> KotlinNativeSupportedOs.MacOsX64
+//        hostOs == "Linux" && isArm64 -> KotlinNativeSupportedOs.LinuxArm64
+            hostOs == "Linux" && !isArm64 -> linuxX64()
+            isMingwX64 -> mingwX64()
+            else -> throw GradleException("Unsupported OS.")
+        }
+    }
+
+    val nativeTarget: KotlinNativeTarget = getNativeTarget()
+    nativeTarget.apply {
+
         binaries {
-            sharedLib {
+
+            staticLib {
+
                 //TODO : Rename sub module to avoid basename property
-                baseName = BASE_NAME
+                baseName = libraryName
             }
         }
     }
-
-    /*linuxX64 {
-        binaries {
-            sharedLib {
-                baseName = BASE_NAME
-            }
-        } 
-    }*/
 
     sourceSets.all {
+
         languageSettings.apply {
-            languageVersion = "1.9"
-            apiVersion = "1.9"
-            progressiveMode = true
-            optIn("ExperimentalStdlibApi,ExperimentalEncodingApi")
+
+            languageVersion = KotlinVersion.KOTLIN_2_2.version
+            apiVersion = KotlinVersion.KOTLIN_2_2.version
         }
     }
 
     sourceSets {
-        val commonMain by getting {
+
+        val commonMain: KotlinSourceSet by getting {
+
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.0")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
-                implementation(platform("io.ktor:ktor-bom:3.0.0-tls-eap-907"))
-                implementation("io.ktor:ktor-client-core")
-                implementation("io.ktor:ktor-client-auth")
-                implementation("io.ktor:ktor-client-content-negotiation")
-                implementation("io.ktor:ktor-client-logging")
-                implementation("io.ktor:ktor-serialization-kotlinx-json")
-                implementation("com.soywiz.korlibs.klock:klock:4.0.10")
+
+                implementation(dependencyNotation = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.0")
+                implementation(dependencyNotation = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
+                implementation(
+                    dependencyNotation = project.dependencies.platform(
+
+                        /* notation = */ "io.ktor:ktor-bom:3.0.0-tls-eap-907"
+                    )
+                )
+                implementation(dependencyNotation = "io.ktor:ktor-client-core")
+                implementation(dependencyNotation = "io.ktor:ktor-client-auth")
+                implementation(dependencyNotation = "io.ktor:ktor-client-content-negotiation")
+                implementation(dependencyNotation = "io.ktor:ktor-client-logging")
+                implementation(dependencyNotation = "io.ktor:ktor-serialization-kotlinx-json")
+                implementation(dependencyNotation = "com.soywiz.korlibs.klock:klock:4.0.10")
             }
         }
-        val commonTest by getting {
+
+        val commonTest: KotlinSourceSet by getting {
+
             dependencies {
-                implementation(kotlin("test"))
+
+                implementation(dependencyNotation = kotlin(simpleModuleName = "test"))
             }
         }
-        val mingwX64Main by getting {
-            dependencies {
-//                implementation("io.ktor:ktor-client-curl")
-                implementation("io.ktor:ktor-client-winhttp")
+
+        when (nativeTarget.konanTarget) {
+
+            KonanTarget.MINGW_X64 -> {
+
+                val nativeMain: KotlinSourceSet by getting {
+
+                    dependencies {
+
+//                        implementation(dependencyNotation = "io.ktor:ktor-client-curl")
+                        implementation(dependencyNotation = "io.ktor:ktor-client-winhttp")
+                    }
+                }
             }
+
+            KonanTarget.LINUX_X64 -> {
+
+                val nativeMain: KotlinSourceSet by getting {
+
+                    dependencies {
+
+                        implementation(dependencyNotation = "io.ktor:ktor-client-curl")
+//                        implementation(dependencyNotation = "io.ktor:ktor-client-cio")
+                    }
+                }
+            }
+
+            else -> throw GradleException("Unsupported OS.")
         }
-        /*val linuxX64Main by getting {
-            dependencies {
-                implementation("io.ktor:ktor-client-curl")
-                // implementation("io.ktor:ktor-client-cio")
-            }
-        }*/
     }
 }
 
 android {
-    namespace = "account_ledger_library"
-    compileSdk = 34
+
+    namespace = "account_ledger_library.multi_platform"
+    compileSdkPreview = "VanillaIceCream"
+
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
 }
