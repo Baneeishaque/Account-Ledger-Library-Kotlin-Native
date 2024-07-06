@@ -120,7 +120,9 @@ class GistUtilsInteractiveNative {
                         } else {
 
                             if (currentLine.isNotEmpty()) {
+
                                 extractedLedger = TextAccountLedgerUtils.addLineToCurrentAccountLedger(
+
                                     ledgerToProcess = extractedLedger,
                                     desiredAccountId = currentAccountId,
                                     desiredLine = currentLine
@@ -151,9 +153,11 @@ class GistUtilsInteractiveNative {
                                 } else if (isNextLineFinalBalance) {
 
                                     if (isDevelopmentMode) {
+
                                         println("ledgerLine = $ledgerLine")
                                         if (ledgerLine.trim().contains(char = ' ')) {
-                                            val endIndex = ledgerLine.indexOf(char = ' ')
+
+                                            val endIndex: Int = ledgerLine.indexOf(char = ' ')
                                             println("endIndex = $endIndex")
                                             println("actual value : ${ledgerLine.substring(0, endIndex)}")
                                         }
@@ -184,7 +188,7 @@ class GistUtilsInteractiveNative {
                                             transactionDate.format(DateTimeUtilsCommonNative.normalDatePattern)
                                         if (ledgerLineContents.size > 1) {
 
-                                            val initialBalanceOnDate: Double = ledgerLineContents[1].toDouble()
+                                            val initialBalanceOnDate: Double = ledgerLineContents.last().toDouble()
                                             accountLedgerGist.accountLedgerPages[localCurrentAccountId]!![transactionDateAsText] =
                                                 AccountLedgerGistDateLedgerModel(
                                                     initialBalanceOnDate = initialBalanceOnDate,
@@ -212,7 +216,9 @@ class GistUtilsInteractiveNative {
                                             previousDate.format(DateTimeUtilsCommonNative.normalDatePattern)
 
                                         accountLedgerGist.accountLedgerPages[localCurrentAccountId]!![transactionDateAsText]!!.transactionsOnDate.add(
+
                                             AccountLedgerGistTransactionModel(
+
                                                 transactionParticulars = transactionParticulars,
                                                 transactionAmount = transactionAmount
                                             )
@@ -288,6 +294,7 @@ class GistUtilsInteractiveNative {
     ): String {
 
         val accountLedgerGist: AccountLedgerGistModel = processGistIdForData(
+
             userName = userName,
             userId = userId,
             gitHubAccessToken = gitHubAccessToken,
@@ -299,15 +306,18 @@ class GistUtilsInteractiveNative {
 
             println(
                 "Gist Data : ${
+
                     Json.encodeToString(
-                        AccountLedgerGistModel.serializer(),
-                        accountLedgerGist
+
+                        serializer = AccountLedgerGistModel.serializer(),
+                        value = accountLedgerGist
                     )
                 }"
             )
         }
 
         val accountLedgerGistV2 = AccountLedgerGistModelV2(
+
             userName = accountLedgerGist.userName,
             userId = userId,
             accountLedgerPages = mutableListOf()
@@ -338,8 +348,9 @@ class GistUtilsInteractiveNative {
         }
 
         val accountLedgerGistTextV2: String = Json.encodeToString(
-            AccountLedgerGistModelV2.serializer(),
-            accountLedgerGistV2
+
+            serializer = AccountLedgerGistModelV2.serializer(),
+            value = accountLedgerGistV2
         )
         if (isDevelopmentMode) {
 
