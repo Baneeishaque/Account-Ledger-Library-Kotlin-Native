@@ -22,7 +22,8 @@ class GistUtilsInteractiveNative {
         gitHubAccessToken: String,
         gistId: String,
         isDevelopmentMode: Boolean,
-        isApiCall: Boolean = true
+        isApiCall: Boolean = true,
+        isVersion3: Boolean = false
 
     ): AccountLedgerGistModel {
 
@@ -119,7 +120,7 @@ class GistUtilsInteractiveNative {
                             }
                         } else {
 
-                            if (currentLine.isNotEmpty()) {
+                            if (currentLine.isNotEmpty() && (!currentLine.startsWith(prefix = "#"))) {
 
                                 extractedLedger = TextAccountLedgerUtils.addLineToCurrentAccountLedger(
 
@@ -205,16 +206,30 @@ class GistUtilsInteractiveNative {
 
                                     } catch (_: Exception) {
 
-                                        val transactionAmount: Double =
-                                            if (dateOrAmount == "0") 0.0 else (if (dateOrAmount.contains(char = '+')) dateOrAmount.toDouble() else (if (dateOrAmount.contains(
-                                                    char = '-'
-                                                )
-                                            ) dateOrAmount.toDouble() else -(dateOrAmount.toDouble())))
-                                        val transactionParticulars: String = ledgerLineContents[1]
-
                                         val transactionDateAsText: String =
                                             previousDate.format(DateTimeUtilsCommonNative.normalDatePattern)
 
+                                        val transactionParticulars: String
+                                        val transactionAmount: Double
+                                        if (isVersion3) {
+
+                                            val transactionContents: List<String> = ledgerLineContents.last().split(
+
+                                                " ",
+                                                limit = 2
+                                            )
+                                            transactionAmount = transactionContents.first().toDouble()
+                                            transactionParticulars =
+                                                "${ledgerLineContents.first()} ${transactionContents.last()}"
+
+                                        } else {
+
+                                            transactionAmount = if (dateOrAmount == "0") 0.0
+                                            else (if (dateOrAmount.contains(char = '+')) dateOrAmount.toDouble()
+                                            else (if (dateOrAmount.contains(char = '-')) dateOrAmount.toDouble()
+                                            else -(dateOrAmount.toDouble())))
+                                            transactionParticulars = ledgerLineContents[1]
+                                        }
                                         accountLedgerGist.accountLedgerPages[localCurrentAccountId]!![transactionDateAsText]!!.transactionsOnDate.add(
 
                                             AccountLedgerGistTransactionModel(
@@ -289,7 +304,8 @@ class GistUtilsInteractiveNative {
         gitHubAccessToken: String,
         gistId: String,
         isDevelopmentMode: Boolean,
-        isApiCall: Boolean = true
+        isApiCall: Boolean = true,
+        isVersion3: Boolean = false
 
     ): String {
 
@@ -301,6 +317,7 @@ class GistUtilsInteractiveNative {
             gistId = gistId,
             isDevelopmentMode = isDevelopmentMode,
             isApiCall = isApiCall,
+            isVersion3 = isVersion3
         )
         if (isDevelopmentMode) {
 
@@ -354,7 +371,7 @@ class GistUtilsInteractiveNative {
         )
         if (isDevelopmentMode) {
 
-            println("Gist Data V2 : $accountLedgerGistTextV2")
+            println("Gist Data ${if (isVersion3) "V3" else "V2"} : $accountLedgerGistTextV2")
         }
 
         return accountLedgerGistTextV2
