@@ -96,4 +96,6 @@ object ConstantsNative {
 
         return "$accountSpecifier-Income"
     }
+
+    const val GIST_V3_TO_ACCOUNT_ID_SEPARATOR = "=>"
 }

@@ -380,4 +380,51 @@ class GistUtilsInteractiveNative {
         }
         return accountLedgerGistV3
     }
+
+    fun processGistIdForDataV3ToV4(
+
+        userName: String,
+        userId: UInt,
+        gitHubAccessToken: String,
+        gistId: String,
+        isDevelopmentMode: Boolean,
+        dummy: Boolean = true,
+        dummy2: Boolean = true
+    ) {
+
+        val accountLedgerGistV3: AccountLedgerGistModelV3 = processGistIdForDataV3(
+
+            userName = userName,
+            userId = userId,
+            gitHubAccessToken = gitHubAccessToken,
+            gistId = gistId,
+            isDevelopmentMode = isDevelopmentMode,
+            isApiCall = false,
+            isVersion3 = true
+        )
+
+        for ((accountId: UInt, transactionDatePages: MutableList<TransactionDatePage>) in accountLedgerGistV3.accountLedgerPages) {
+
+            for ((transactionDate: String, _: Double?, transactions: List<AccountLedgerGistTransactionModel>?, _: Double?) in transactionDatePages) {
+
+                if (transactions != null) {
+
+                    for ((transactionParticulars: String, transactionAmount: Double) in transactions) {
+
+                        val transactionParticularsContents: List<String> = transactionParticulars.split(" ", limit = 2)
+                        println(
+
+                            message = "$transactionDate ${transactionParticularsContents.first()} [$accountId] [${
+                                transactionParticularsContents.last()
+                                    .substringAfter(delimiter = ConstantsNative.GIST_V3_TO_ACCOUNT_ID_SEPARATOR).trim()
+                            }] $transactionAmount ${
+                                transactionParticularsContents.last()
+                                    .substringBefore(delimiter = ConstantsNative.GIST_V3_TO_ACCOUNT_ID_SEPARATOR).trim()
+                            }"
+                        )
+                    }
+                }
+            }
+        }
+    }
 }
