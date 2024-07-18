@@ -2,15 +2,10 @@ package account_ledger_library.utils
 
 import account_ledger_library.constants.ConstantsNative
 import account_ledger_library.models.*
-import common_utils_library.utils.GistUtilsCommonNative
-import common_utils_library.utils.GistUtilsInteractiveCommonNative
 import common_utils_library.utils.DateTimeUtilsCommonNative
-import io.ktor.client.*
-import io.ktor.utils.io.core.*
 import korlibs.time.Date
 import korlibs.time.DateTime
 import korlibs.time.parseDate
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 
 class GistUtilsInteractiveNative {
@@ -23,7 +18,8 @@ class GistUtilsInteractiveNative {
         gistId: String,
         isDevelopmentMode: Boolean,
         isApiCall: Boolean = true,
-        isVersion3: Boolean = false
+        isVersion3: Boolean = false,
+        getGistContentLinesProcess: (String, String, Boolean) -> List<String> = GistUtilsNative.Companion::getGistContent
 
     ): AccountLedgerGistModelV2 {
 
@@ -33,270 +29,258 @@ class GistUtilsInteractiveNative {
             userId = userId,
             accountLedgerPages = LinkedHashMap()
         )
-        runBlocking {
 
-            GistUtilsCommonNative.getHttpClientForGitHub(
+        val gistContentLines: List<String> = getGistContentLinesProcess.invoke(
 
-                accessToken = gitHubAccessToken,
-                isDevelopmentMode = isDevelopmentMode
+            gitHubAccessToken,
+            gistId,
+            isDevelopmentMode
+        )
 
-            ).use { client: HttpClient ->
+        var currentAccountId = 0u
+        var extractedLedger: LinkedHashMap<UInt, MutableList<String>> = LinkedHashMap()
 
-                // TODO: inline use of serialization : for file name in gist
-                val gistContent: String = GistUtilsInteractiveCommonNative.getGistContents(
+        var isExecutionSuccess = true
+        gistContentLines.forEach { currentLine: String ->
 
-                    client = client,
-                    gistId = gistId,
-                    isDevelopmentMode = isDevelopmentMode
+            if (isExecutionSuccess) {
 
-                ).files.mainTxt.content
+                if (isDevelopmentMode) {
 
-                val gistContentLines: List<String> = gistContent.lines()
+                    println(message = "Current line = $currentLine")
+                    println(message = "currentAccountId = $currentAccountId")
+                }
 
-                var currentAccountId = 0u
-                var extractedLedger: LinkedHashMap<UInt, MutableList<String>> = LinkedHashMap()
+                if (currentLine.isNotEmpty() &&
+                    (!currentLine.startsWith(prefix = "#")) &&
+                    (currentLine.contains(
 
-                var isExecutionSuccess = true
-                gistContentLines.forEach { currentLine: String ->
+                        char = ConstantsNative.ACCOUNT_ID_PREFIX
+                    ))
+                ) {
+                    currentAccountId =
+                        currentLine.substring(
 
-                    if (isExecutionSuccess) {
+                            startIndex = currentLine.indexOf(ConstantsNative.ACCOUNT_ID_PREFIX) + 1,
+                            endIndex = currentLine.indexOf(
+                                ConstantsNative.ACCOUNT_ID_SUFFIX
+                            )
+                        ).toUInt()
+                    if (currentAccountId == 0U) {
 
-                        if (isDevelopmentMode) {
-
-                            println(message = "Current line = $currentLine")
-                            println(message = "currentAccountId = $currentAccountId")
-                        }
-
-                        if (currentLine.isNotEmpty() && (!currentLine.startsWith(prefix = "#")) && (currentLine.contains(
-
-                                char = ConstantsNative.ACCOUNT_ID_PREFIX
-                            ))
-                        ) {
-                            currentAccountId =
+                        val errorMessage =
+                            "Error : Account ID Must be a positive number, please correct it in your Gist Text for A/C {${
                                 currentLine.substring(
 
-                                    startIndex = currentLine.indexOf(ConstantsNative.ACCOUNT_ID_PREFIX) + 1,
+                                    startIndex = 0,
                                     endIndex = currentLine.indexOf(
-                                        ConstantsNative.ACCOUNT_ID_SUFFIX
+
+                                        ConstantsNative.ACCOUNT_ID_PREFIX
                                     )
-                                ).toUInt()
-                            if (currentAccountId == 0U) {
+                                ).trim()
+                            }}"
 
-                                val errorMessage =
-                                    "Error : Account ID Must be a positive number, please correct it in your Gist Text for A/C {${
-                                        currentLine.substring(
+                        if (isApiCall) {
+                            //TODO : Create Common Utils for Multiplatform,
+                            // Depend on it to use ApiErrorMessage function
+                            if (isDevelopmentMode) {
 
-                                            startIndex = 0,
-                                            endIndex = currentLine.indexOf(
-
-                                                ConstantsNative.ACCOUNT_ID_PREFIX
-                                            )
-                                        ).trim()
-                                    }}"
-
-                                if (isApiCall) {
-                                    //TODO : Create Common Utils for Multiplatform,
-                                    // Depend on it to use ApiErrorMessage function
-                                    if (isDevelopmentMode) {
-
-                                        println(message = errorMessage)
-                                    }
-                                } else {
-
-                                    println(message = errorMessage)
-                                }
-                                isExecutionSuccess = false
-
-                            } else {
-                                extractedLedger = TextAccountLedgerUtils.addLineToCurrentAccountLedger(
-
-                                    ledgerToProcess = extractedLedger,
-                                    desiredAccountId = currentAccountId,
-                                    desiredLine = currentLine.substring(
-
-                                        startIndex = currentLine.indexOf(
-
-                                            char = ConstantsNative.ACCOUNT_ID_SUFFIX
-
-                                        ) + 2
-                                    )
-                                )
+                                println(message = errorMessage)
                             }
                         } else {
 
-                            if (currentLine.isNotEmpty() && (!currentLine.startsWith(prefix = "#"))) {
-
-                                extractedLedger = TextAccountLedgerUtils.addLineToCurrentAccountLedger(
-
-                                    ledgerToProcess = extractedLedger,
-                                    desiredAccountId = currentAccountId,
-                                    desiredLine = currentLine
-                                )
-                            }
+                            println(message = errorMessage)
                         }
+                        isExecutionSuccess = false
+
+                    } else {
+                        extractedLedger = TextAccountLedgerUtils.addLineToCurrentAccountLedger(
+
+                            ledgerToProcess = extractedLedger,
+                            desiredAccountId = currentAccountId,
+                            desiredLine = currentLine.substring(
+
+                                startIndex = currentLine.indexOf(
+
+                                    char = ConstantsNative.ACCOUNT_ID_SUFFIX
+
+                                ) + 2
+                            )
+                        )
+                    }
+                } else {
+
+                    if (currentLine.isNotEmpty() && (!currentLine.startsWith(prefix = "#"))) {
+
+                        extractedLedger = TextAccountLedgerUtils.addLineToCurrentAccountLedger(
+
+                            ledgerToProcess = extractedLedger,
+                            desiredAccountId = currentAccountId,
+                            desiredLine = currentLine
+                        )
                     }
                 }
+            }
+        }
 
-                if (isExecutionSuccess) {
-                    extractedLedger.forEach { (localCurrentAccountId: UInt, currentAccountLedgerLines: List<String>) ->
+        if (isExecutionSuccess) {
+            extractedLedger.forEach { (localCurrentAccountId: UInt, currentAccountLedgerLines: List<String>) ->
 
-                        accountLedgerGistV2.accountLedgerPages[localCurrentAccountId] = LinkedHashMap()
+                accountLedgerGistV2.accountLedgerPages[localCurrentAccountId] = LinkedHashMap()
 
-                        var isNextLineFinalBalance = false
-                        var previousDate: Date = DateTime.now().date
-                        var isFinalBalanceWritten = false
-                        var finalBalanceWrittenDate: Date = DateTime.now().date
+                var isNextLineFinalBalance = false
+                var previousDate: Date = DateTime.now().date
+                var isFinalBalanceWritten = false
+                var finalBalanceWrittenDate: Date = DateTime.now().date
 
-                        currentAccountLedgerLines.forEach { ledgerLine: String ->
+                currentAccountLedgerLines.forEach { ledgerLine: String ->
 
-                            if (ledgerLine.first() != ConstantsNative.DATE_UNDERLINE_CHARACTER) {
+                    if (ledgerLine.first() != ConstantsNative.DATE_UNDERLINE_CHARACTER) {
 
-                                if (ledgerLine.first() == ConstantsNative.FINAL_BALANCE_PREFIX_CHARACTER) {
+                        if (ledgerLine.first() == ConstantsNative.FINAL_BALANCE_PREFIX_CHARACTER) {
 
-                                    isNextLineFinalBalance = true
+                            isNextLineFinalBalance = true
 
-                                } else if (isNextLineFinalBalance) {
+                        } else if (isNextLineFinalBalance) {
 
-                                    if (isDevelopmentMode) {
+                            if (isDevelopmentMode) {
 
-                                        println("ledgerLine = $ledgerLine")
-                                        if (ledgerLine.trim().contains(char = ' ')) {
+                                println("ledgerLine = $ledgerLine")
+                                if (ledgerLine.trim().contains(char = ' ')) {
 
-                                            val endIndex: Int = ledgerLine.indexOf(char = ' ')
-                                            println("endIndex = $endIndex")
-                                            println("actual value : ${ledgerLine.substring(0, endIndex)}")
-                                        }
-                                    }
+                                    val endIndex: Int = ledgerLine.indexOf(char = ' ')
+                                    println("endIndex = $endIndex")
+                                    println("actual value : ${ledgerLine.substring(0, endIndex)}")
+                                }
+                            }
 
-                                    val finalBalance: Double = (
-                                            if (ledgerLine.trim().contains(char = ' '))
-                                                ledgerLine.substring(0, ledgerLine.indexOf(char = ' '))
-                                            else ledgerLine).toDouble()
-                                    val transactionDateAsText: String =
-                                        previousDate.format(DateTimeUtilsCommonNative.normalDatePattern)
+                            val finalBalance: Double = (
+                                    if (ledgerLine.trim().contains(char = ' '))
+                                        ledgerLine.substring(0, ledgerLine.indexOf(char = ' '))
+                                    else ledgerLine).toDouble()
+                            val transactionDateAsText: String =
+                                previousDate.format(DateTimeUtilsCommonNative.normalDatePattern)
 
-                                    accountLedgerGistV2.accountLedgerPages[localCurrentAccountId]!![transactionDateAsText]!!.finalBalanceOnDate =
-                                        finalBalance
-                                    isFinalBalanceWritten = true
-                                    finalBalanceWrittenDate = previousDate
+                            accountLedgerGistV2.accountLedgerPages[localCurrentAccountId]!![transactionDateAsText]!!.finalBalanceOnDate =
+                                finalBalance
+                            isFinalBalanceWritten = true
+                            finalBalanceWrittenDate = previousDate
 
-                                    isNextLineFinalBalance = false
+                            isNextLineFinalBalance = false
+
+                        } else {
+
+                            val ledgerLineContents: List<String> = ledgerLine.split(" ", limit = 2)
+                            val dateOrAmount: String = ledgerLineContents.first()
+                            try {
+                                val transactionDate: Date =
+                                    DateTimeUtilsCommonNative.normalDatePattern.parseDate(str = dateOrAmount)
+                                val transactionDateAsText: String =
+                                    transactionDate.format(DateTimeUtilsCommonNative.normalDatePattern)
+                                if (ledgerLineContents.size > 1) {
+
+                                    val initialBalanceOnDate: Double = ledgerLineContents.last().toDouble()
+                                    accountLedgerGistV2.accountLedgerPages[localCurrentAccountId]!![transactionDateAsText] =
+                                        AccountLedgerGistDateLedgerModel(
+                                            initialBalanceOnDate = initialBalanceOnDate,
+                                            transactionsOnDate = mutableListOf()
+                                        )
+                                } else {
+
+                                    accountLedgerGistV2.accountLedgerPages[localCurrentAccountId]!![transactionDateAsText] =
+                                        AccountLedgerGistDateLedgerModel(
+                                            transactionsOnDate = mutableListOf()
+                                        )
+                                }
+                                previousDate = transactionDate
+
+                            } catch (_: Exception) {
+
+                                val transactionDateAsText: String =
+                                    previousDate.format(DateTimeUtilsCommonNative.normalDatePattern)
+
+                                val transactionParticulars: String
+                                val transactionAmount: Double
+                                if (isVersion3) {
+
+                                    val transactionContents: List<String> = ledgerLineContents.last().split(
+
+                                        " ",
+                                        limit = 2
+                                    )
+                                    transactionAmount = transactionContents.first().toDouble()
+                                    transactionParticulars =
+                                        "${ledgerLineContents.first()} ${transactionContents.last()}"
 
                                 } else {
 
-                                    val ledgerLineContents: List<String> = ledgerLine.split(" ", limit = 2)
-                                    val dateOrAmount: String = ledgerLineContents.first()
-                                    try {
-                                        val transactionDate: Date =
-                                            DateTimeUtilsCommonNative.normalDatePattern.parseDate(str = dateOrAmount)
-                                        val transactionDateAsText: String =
-                                            transactionDate.format(DateTimeUtilsCommonNative.normalDatePattern)
-                                        if (ledgerLineContents.size > 1) {
+                                    transactionAmount = if (dateOrAmount == "0") 0.0
+                                    else (if (dateOrAmount.contains(char = '+')) dateOrAmount.toDouble()
+                                    else (if (dateOrAmount.contains(char = '-')) dateOrAmount.toDouble()
+                                    else -(dateOrAmount.toDouble())))
+                                    transactionParticulars = ledgerLineContents[1]
+                                }
+                                accountLedgerGistV2.accountLedgerPages[localCurrentAccountId]!![transactionDateAsText]!!.transactionsOnDate.add(
 
-                                            val initialBalanceOnDate: Double = ledgerLineContents.last().toDouble()
-                                            accountLedgerGistV2.accountLedgerPages[localCurrentAccountId]!![transactionDateAsText] =
-                                                AccountLedgerGistDateLedgerModel(
-                                                    initialBalanceOnDate = initialBalanceOnDate,
-                                                    transactionsOnDate = mutableListOf()
-                                                )
-                                        } else {
+                                    AccountLedgerGistTransactionModel(
 
-                                            accountLedgerGistV2.accountLedgerPages[localCurrentAccountId]!![transactionDateAsText] =
-                                                AccountLedgerGistDateLedgerModel(
-                                                    transactionsOnDate = mutableListOf()
-                                                )
-                                        }
-                                        previousDate = transactionDate
+                                        transactionParticulars = transactionParticulars,
+                                        transactionAmount = transactionAmount
+                                    )
+                                )
 
-                                    } catch (_: Exception) {
+                                if (isFinalBalanceWritten && (finalBalanceWrittenDate == previousDate)) {
 
-                                        val transactionDateAsText: String =
-                                            previousDate.format(DateTimeUtilsCommonNative.normalDatePattern)
-
-                                        val transactionParticulars: String
-                                        val transactionAmount: Double
-                                        if (isVersion3) {
-
-                                            val transactionContents: List<String> = ledgerLineContents.last().split(
-
-                                                " ",
-                                                limit = 2
-                                            )
-                                            transactionAmount = transactionContents.first().toDouble()
-                                            transactionParticulars =
-                                                "${ledgerLineContents.first()} ${transactionContents.last()}"
-
-                                        } else {
-
-                                            transactionAmount = if (dateOrAmount == "0") 0.0
-                                            else (if (dateOrAmount.contains(char = '+')) dateOrAmount.toDouble()
-                                            else (if (dateOrAmount.contains(char = '-')) dateOrAmount.toDouble()
-                                            else -(dateOrAmount.toDouble())))
-                                            transactionParticulars = ledgerLineContents[1]
-                                        }
-                                        accountLedgerGistV2.accountLedgerPages[localCurrentAccountId]!![transactionDateAsText]!!.transactionsOnDate.add(
-
-                                            AccountLedgerGistTransactionModel(
-
-                                                transactionParticulars = transactionParticulars,
-                                                transactionAmount = transactionAmount
-                                            )
-                                        )
-
-                                        if (isFinalBalanceWritten && (finalBalanceWrittenDate == previousDate)) {
-
-                                            accountLedgerGistV2.accountLedgerPages[localCurrentAccountId]!![transactionDateAsText]!!.finalBalanceOnDate =
-                                                null
-                                            isFinalBalanceWritten = false
-                                        }
-                                    }
+                                    accountLedgerGistV2.accountLedgerPages[localCurrentAccountId]!![transactionDateAsText]!!.finalBalanceOnDate =
+                                        null
+                                    isFinalBalanceWritten = false
                                 }
                             }
                         }
                     }
                 }
-                if (isApiCall) {
+            }
+        }
+        if (isApiCall) {
 
-                    val accountLedgerGistAccounts: MutableList<AccountLedgerGistAccountModel> = mutableListOf()
+            val accountLedgerGistAccounts: MutableList<AccountLedgerGistAccountModel> = mutableListOf()
 
-                    if (isExecutionSuccess) {
-                        accountLedgerGistV2.accountLedgerPages.forEach { accountLedgerGistIdPage: Map.Entry<UInt, LinkedHashMap<String, AccountLedgerGistDateLedgerModel>> ->
+            if (isExecutionSuccess) {
+                accountLedgerGistV2.accountLedgerPages.forEach { accountLedgerGistIdPage: Map.Entry<UInt, LinkedHashMap<String, AccountLedgerGistDateLedgerModel>> ->
 
-                            val accountLedgerGistDateLedgersForJson: MutableList<AccountLedgerGistDateLedgerModelForJson> =
-                                mutableListOf()
+                    val accountLedgerGistDateLedgersForJson: MutableList<AccountLedgerGistDateLedgerModelForJson> =
+                        mutableListOf()
 
-                            accountLedgerGistIdPage.value.forEach { accountLedgerGistDatePage: Map.Entry<String, AccountLedgerGistDateLedgerModel> ->
+                    accountLedgerGistIdPage.value.forEach { accountLedgerGistDatePage: Map.Entry<String, AccountLedgerGistDateLedgerModel> ->
 
-                                accountLedgerGistDateLedgersForJson.add(
-                                    AccountLedgerGistDateLedgerModelForJson(
-                                        accountLedgerPageDate = accountLedgerGistDatePage.key,
-                                        initialBalanceOnDate = accountLedgerGistDatePage.value.initialBalanceOnDate,
-                                        transactionsOnDate = accountLedgerGistDatePage.value.transactionsOnDate,
-                                        finalBalanceOnDate = accountLedgerGistDatePage.value.finalBalanceOnDate
-                                    )
-                                )
-                            }
-
-                            accountLedgerGistAccounts.add(
-                                AccountLedgerGistAccountModel(
-                                    accountId = accountLedgerGistIdPage.key,
-                                    accountLedgerDatePages = accountLedgerGistDateLedgersForJson
-                                )
+                        accountLedgerGistDateLedgersForJson.add(
+                            AccountLedgerGistDateLedgerModelForJson(
+                                accountLedgerPageDate = accountLedgerGistDatePage.key,
+                                initialBalanceOnDate = accountLedgerGistDatePage.value.initialBalanceOnDate,
+                                transactionsOnDate = accountLedgerGistDatePage.value.transactionsOnDate,
+                                finalBalanceOnDate = accountLedgerGistDatePage.value.finalBalanceOnDate
                             )
-                        }
+                        )
                     }
-                    print(
-                        Json.encodeToString(
-                            serializer = AccountLedgerGistModelForJson.serializer(),
-                            value = AccountLedgerGistModelForJson(
-                                userName = userName,
-                                userId = userId,
-                                accountLedgerPages = accountLedgerGistAccounts
-                            )
+
+                    accountLedgerGistAccounts.add(
+                        AccountLedgerGistAccountModel(
+                            accountId = accountLedgerGistIdPage.key,
+                            accountLedgerDatePages = accountLedgerGistDateLedgersForJson
                         )
                     )
                 }
             }
+            print(
+                Json.encodeToString(
+                    serializer = AccountLedgerGistModelForJson.serializer(),
+                    value = AccountLedgerGistModelForJson(
+                        userName = userName,
+                        userId = userId,
+                        accountLedgerPages = accountLedgerGistAccounts
+                    )
+                )
+            )
         }
         return accountLedgerGistV2
     }
@@ -309,7 +293,8 @@ class GistUtilsInteractiveNative {
         gistId: String,
         isDevelopmentMode: Boolean,
         isApiCall: Boolean = true,
-        isVersion3: Boolean = false
+        isVersion3: Boolean = false,
+        getGistContentLinesProcess: (String, String, Boolean) -> List<String> = GistUtilsNative.Companion::getGistContent
 
     ): AccountLedgerGistModelV3 {
 
@@ -321,7 +306,8 @@ class GistUtilsInteractiveNative {
             gistId = gistId,
             isDevelopmentMode = isDevelopmentMode,
             isApiCall = false,
-            isVersion3 = isVersion3
+            isVersion3 = isVersion3,
+            getGistContentLinesProcess = getGistContentLinesProcess
         )
         if (isDevelopmentMode) {
 
@@ -379,6 +365,75 @@ class GistUtilsInteractiveNative {
             )
         }
         return accountLedgerGistV3
+    }
+
+    fun processGistIdForDataV4(
+
+        userName: String,
+        userId: UInt,
+        gitHubAccessToken: String,
+        gistId: String,
+        isDevelopmentMode: Boolean,
+        dummy: Boolean = true,
+        dummy2: Boolean = true
+    ) {
+        val gistContentLinesV3: MutableList<String> = mutableListOf()
+        for (currentLine: String in (GistUtilsNative.getGistContent(
+
+            gitHubAccessToken = gitHubAccessToken,
+            gistId = gistId,
+            isDevelopmentMode = isDevelopmentMode
+
+        ))) {
+
+            if (currentLine.isNotEmpty() && (!currentLine.startsWith(prefix = "#"))) {
+
+                val parts: List<String> = currentLine.split(" ")
+                val transactionDate: String = parts[0]
+                val transactionTime: String = parts[1]
+                val fromAccountId: String = parts[2].removeSurrounding("[", "]")
+                val toAccountId: String = parts[3].removeSurrounding("[", "]")
+                val transactionAmount: Double = parts[4].toDouble()
+                val transactionParticulars: String = parts.subList(
+
+                    fromIndex = 5,
+                    toIndex = parts.size
+
+                ).joinToString(separator = " ")
+
+                gistContentLinesV3.addAll(
+
+                    elements = listOf(
+
+                        "X [$fromAccountId] $transactionDate",
+                        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+                        "$transactionTime $transactionAmount ${
+
+                            transactionParticulars.replace(
+
+                                oldValue = "=>",
+                                newValue = "->"
+                            )
+
+                        } => $toAccountId"
+                    )
+                )
+            }
+        }
+        if (gistContentLinesV3.isNotEmpty()) {
+
+            processGistIdForDataV3(
+
+                userName = userName,
+                userId = userId,
+                gitHubAccessToken = gitHubAccessToken,
+                gistId = gistId,
+                isDevelopmentMode = isDevelopmentMode,
+                isApiCall = true,
+                isVersion3 = true,
+                getGistContentLinesProcess = { _: String, _: String, _: Boolean -> gistContentLinesV3 }
+            )
+        }
     }
 
     fun processGistIdForDataV3ToV4(
