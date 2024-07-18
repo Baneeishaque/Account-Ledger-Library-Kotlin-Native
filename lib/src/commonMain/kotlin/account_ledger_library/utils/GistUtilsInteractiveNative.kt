@@ -320,7 +320,7 @@ class GistUtilsInteractiveNative {
             gitHubAccessToken = gitHubAccessToken,
             gistId = gistId,
             isDevelopmentMode = isDevelopmentMode,
-            isApiCall = isApiCall,
+            isApiCall = false,
             isVersion3 = isVersion3
         )
         if (isDevelopmentMode) {
@@ -366,6 +366,17 @@ class GistUtilsInteractiveNative {
             }
 
             accountLedgerGistV3.accountLedgerPages.add(localAccountLedgerPage)
+        }
+        if (isApiCall) {
+
+            println(
+
+                message = Json.encodeToString(
+
+                    serializer = AccountLedgerGistModelV3.serializer(),
+                    value = accountLedgerGistV3
+                )
+            )
         }
         return accountLedgerGistV3
     }
