@@ -4,7 +4,7 @@ import kotlinx.serialization.Required
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AccountLedgerGistModel(
+data class AccountLedgerGistModelV2(
     @Required val userName: String,
     @Required val userId: UInt,
     //TODO : Include A/C Name
@@ -12,7 +12,7 @@ data class AccountLedgerGistModel(
 )
 
 @Serializable
-data class AccountLedgerGistModelV2(
+data class AccountLedgerGistModelV3(
     @Required val userName: String,
     @Required val userId: UInt,
     @Required val accountLedgerPages: MutableList<AccountLedgerPage>

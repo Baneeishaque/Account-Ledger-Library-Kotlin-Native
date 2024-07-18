@@ -15,7 +15,7 @@ import kotlinx.serialization.json.Json
 
 class GistUtilsInteractiveNative {
 
-    fun processGistIdForData(
+    fun processGistIdForDataV2(
 
         userName: String,
         userId: UInt,
@@ -25,9 +25,9 @@ class GistUtilsInteractiveNative {
         isApiCall: Boolean = true,
         isVersion3: Boolean = false
 
-    ): AccountLedgerGistModel {
+    ): AccountLedgerGistModelV2 {
 
-        val accountLedgerGist = AccountLedgerGistModel(
+        val accountLedgerGistV2 = AccountLedgerGistModelV2(
 
             userName = userName,
             userId = userId,
@@ -140,7 +140,7 @@ class GistUtilsInteractiveNative {
                 if (isExecutionSuccess) {
                     extractedLedger.forEach { (localCurrentAccountId: UInt, currentAccountLedgerLines: List<String>) ->
 
-                        accountLedgerGist.accountLedgerPages[localCurrentAccountId] = LinkedHashMap()
+                        accountLedgerGistV2.accountLedgerPages[localCurrentAccountId] = LinkedHashMap()
 
                         var isNextLineFinalBalance = false
                         var previousDate: Date = DateTime.now().date
@@ -175,7 +175,7 @@ class GistUtilsInteractiveNative {
                                     val transactionDateAsText: String =
                                         previousDate.format(DateTimeUtilsCommonNative.normalDatePattern)
 
-                                    accountLedgerGist.accountLedgerPages[localCurrentAccountId]!![transactionDateAsText]!!.finalBalanceOnDate =
+                                    accountLedgerGistV2.accountLedgerPages[localCurrentAccountId]!![transactionDateAsText]!!.finalBalanceOnDate =
                                         finalBalance
                                     isFinalBalanceWritten = true
                                     finalBalanceWrittenDate = previousDate
@@ -194,14 +194,14 @@ class GistUtilsInteractiveNative {
                                         if (ledgerLineContents.size > 1) {
 
                                             val initialBalanceOnDate: Double = ledgerLineContents.last().toDouble()
-                                            accountLedgerGist.accountLedgerPages[localCurrentAccountId]!![transactionDateAsText] =
+                                            accountLedgerGistV2.accountLedgerPages[localCurrentAccountId]!![transactionDateAsText] =
                                                 AccountLedgerGistDateLedgerModel(
                                                     initialBalanceOnDate = initialBalanceOnDate,
                                                     transactionsOnDate = mutableListOf()
                                                 )
                                         } else {
 
-                                            accountLedgerGist.accountLedgerPages[localCurrentAccountId]!![transactionDateAsText] =
+                                            accountLedgerGistV2.accountLedgerPages[localCurrentAccountId]!![transactionDateAsText] =
                                                 AccountLedgerGistDateLedgerModel(
                                                     transactionsOnDate = mutableListOf()
                                                 )
@@ -234,7 +234,7 @@ class GistUtilsInteractiveNative {
                                             else -(dateOrAmount.toDouble())))
                                             transactionParticulars = ledgerLineContents[1]
                                         }
-                                        accountLedgerGist.accountLedgerPages[localCurrentAccountId]!![transactionDateAsText]!!.transactionsOnDate.add(
+                                        accountLedgerGistV2.accountLedgerPages[localCurrentAccountId]!![transactionDateAsText]!!.transactionsOnDate.add(
 
                                             AccountLedgerGistTransactionModel(
 
@@ -245,7 +245,7 @@ class GistUtilsInteractiveNative {
 
                                         if (isFinalBalanceWritten && (finalBalanceWrittenDate == previousDate)) {
 
-                                            accountLedgerGist.accountLedgerPages[localCurrentAccountId]!![transactionDateAsText]!!.finalBalanceOnDate =
+                                            accountLedgerGistV2.accountLedgerPages[localCurrentAccountId]!![transactionDateAsText]!!.finalBalanceOnDate =
                                                 null
                                             isFinalBalanceWritten = false
                                         }
@@ -260,7 +260,7 @@ class GistUtilsInteractiveNative {
                     val accountLedgerGistAccounts: MutableList<AccountLedgerGistAccountModel> = mutableListOf()
 
                     if (isExecutionSuccess) {
-                        accountLedgerGist.accountLedgerPages.forEach { accountLedgerGistIdPage: Map.Entry<UInt, LinkedHashMap<String, AccountLedgerGistDateLedgerModel>> ->
+                        accountLedgerGistV2.accountLedgerPages.forEach { accountLedgerGistIdPage: Map.Entry<UInt, LinkedHashMap<String, AccountLedgerGistDateLedgerModel>> ->
 
                             val accountLedgerGistDateLedgersForJson: MutableList<AccountLedgerGistDateLedgerModelForJson> =
                                 mutableListOf()
@@ -298,10 +298,10 @@ class GistUtilsInteractiveNative {
                 }
             }
         }
-        return accountLedgerGist
+        return accountLedgerGistV2
     }
 
-    fun processGistIdForTextData(
+    fun processGistIdForDataV3(
 
         userName: String,
         userId: UInt,
@@ -311,9 +311,9 @@ class GistUtilsInteractiveNative {
         isApiCall: Boolean = true,
         isVersion3: Boolean = false
 
-    ): String {
+    ): AccountLedgerGistModelV3 {
 
-        val accountLedgerGist: AccountLedgerGistModel = processGistIdForData(
+        val accountLedgerGistV2: AccountLedgerGistModelV2 = processGistIdForDataV2(
 
             userName = userName,
             userId = userId,
@@ -330,21 +330,21 @@ class GistUtilsInteractiveNative {
 
                     Json.encodeToString(
 
-                        serializer = AccountLedgerGistModel.serializer(),
-                        value = accountLedgerGist
+                        serializer = AccountLedgerGistModelV2.serializer(),
+                        value = accountLedgerGistV2
                     )
                 }"
             )
         }
 
-        val accountLedgerGistV2 = AccountLedgerGistModelV2(
+        val accountLedgerGistV3 = AccountLedgerGistModelV3(
 
-            userName = accountLedgerGist.userName,
+            userName = accountLedgerGistV2.userName,
             userId = userId,
             accountLedgerPages = mutableListOf()
         )
 
-        accountLedgerGist.accountLedgerPages.forEach { accountLedgerPage: Map.Entry<UInt, LinkedHashMap<String, AccountLedgerGistDateLedgerModel>> ->
+        accountLedgerGistV2.accountLedgerPages.forEach { accountLedgerPage: Map.Entry<UInt, LinkedHashMap<String, AccountLedgerGistDateLedgerModel>> ->
 
             val localAccountLedgerPage = AccountLedgerPage(
                 accountId = accountLedgerPage.key,
@@ -365,19 +365,8 @@ class GistUtilsInteractiveNative {
                 )
             }
 
-            accountLedgerGistV2.accountLedgerPages.add(localAccountLedgerPage)
+            accountLedgerGistV3.accountLedgerPages.add(localAccountLedgerPage)
         }
-
-        val accountLedgerGistTextV2: String = Json.encodeToString(
-
-            serializer = AccountLedgerGistModelV2.serializer(),
-            value = accountLedgerGistV2
-        )
-        if (isDevelopmentMode) {
-
-            println("Gist Data ${if (isVersion3) "V3" else "V2"} : $accountLedgerGistTextV2")
-        }
-
-        return accountLedgerGistTextV2
+        return accountLedgerGistV3
     }
 }
