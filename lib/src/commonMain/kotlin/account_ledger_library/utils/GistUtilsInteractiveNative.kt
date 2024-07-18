@@ -67,7 +67,11 @@ class GistUtilsInteractiveNative {
                             println(message = "currentAccountId = $currentAccountId")
                         }
 
-                        if (currentLine.contains(char = ConstantsNative.ACCOUNT_ID_PREFIX)) {
+                        if (currentLine.isNotEmpty() && (!currentLine.startsWith(prefix = "#")) && (currentLine.contains(
+
+                                char = ConstantsNative.ACCOUNT_ID_PREFIX
+                            ))
+                        ) {
                             currentAccountId =
                                 currentLine.substring(
 
