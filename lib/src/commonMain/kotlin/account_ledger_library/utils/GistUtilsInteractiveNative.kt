@@ -183,13 +183,15 @@ class GistUtilsInteractiveNative {
                                     accountLedgerGistV2.accountLedgerPages[localCurrentAccountId]!![transactionDateAsText] =
                                         AccountLedgerGistDateLedgerModel(
                                             initialBalanceOnDate = initialBalanceOnDate,
-                                            transactionsOnDate = mutableListOf()
+                                            transactionsOnDate = accountLedgerGistV2.accountLedgerPages[localCurrentAccountId]!![transactionDateAsText]?.transactionsOnDate
+                                                ?: mutableListOf()
                                         )
                                 } else {
 
                                     accountLedgerGistV2.accountLedgerPages[localCurrentAccountId]!![transactionDateAsText] =
                                         AccountLedgerGistDateLedgerModel(
-                                            transactionsOnDate = mutableListOf()
+                                            transactionsOnDate = accountLedgerGistV2.accountLedgerPages[localCurrentAccountId]!![transactionDateAsText]?.transactionsOnDate
+                                                ?: mutableListOf()
                                         )
                                 }
                                 previousDate = transactionDate
