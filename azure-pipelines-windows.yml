@@ -25,7 +25,7 @@ steps:
     displayName: 'Gradle Build : Shared Library for MinGW-w64'
     inputs:
       gradleOptions: '-Xmx3072m'
-      tasks: linkDebugSharedMingwX64
+      tasks: linkDebugStaticMingwX64
 
   - script: 'gradlew --stop'
     displayName: Stop Gradle Daemon
