@@ -170,7 +170,7 @@ kotlin {
 android {
 
     namespace = "account_ledger_library.multi_platform"
-    compileSdkPreview = "VanillaIceCream"
+    compileSdk = 34
 
     compileOptions {
 
